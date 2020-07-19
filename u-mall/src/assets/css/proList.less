@@ -1,0 +1,188 @@
+@import "reset.css";
+.container {
+    position: relative;
+    width: 7.5rem;
+    margin: 0 auto;
+}
+.wrap {
+    width: 7.1rem;
+    margin: 0 auto;
+}
+.header {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    margin-left: -3.75rem;
+    height: 0.88rem;
+    width: 7.5rem;
+    background-color: #f26b11;
+    z-index: 999;
+    .wrap {
+        display: flex;
+        height: .88rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+    img {
+        width: 0.17rem;
+        height: 0.29rem;
+    }
+    h2 {
+        font-size: .36rem;
+        color: #fff;       
+    }
+    .points {
+        span {
+            display: inline-block;
+            margin-left: .08rem;
+            width: .12rem;
+            height: .12rem;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+    }
+}
+.fixed-nav {
+    position: fixed;
+    top: .88rem;
+    left: 50%;
+    margin-left: -3.75rem;
+    width: 1.64rem;
+    height: 100%;
+    // background-color: pink;
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        // align-items: center;
+        width: 1.64rem;
+        height: 10.5rem;
+        li {
+            position: relative;
+            width: 1.64rem;
+            height: .52rem;
+            line-height: .52rem;
+            text-align: center;
+            a {
+                font-size: .26rem;
+                color: #666;
+            }
+            i {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0.08rem;
+                height: 0.52rem;
+                background-color: #f26b11;
+                display: none;
+            }
+            &:active {
+                a {
+                    color: #f26b11;
+                }
+            &:active {
+                i {
+                    display: block;
+                }
+            }
+            }
+            .bar {
+                display: block;
+            }
+            .orange {
+                color: #f26b11;
+            }
+        }
+    }
+}
+.content {
+    position: absolute;
+    right: 0;
+    top: .88rem;
+    width: 5.45rem;
+    border-left: 1px solid #e0e0e0;
+    // background-color: lightblue;
+    padding-right: .4rem;
+    height: 30rem;
+    .head-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 0.56rem;
+        padding-top: .54rem;
+        padding-bottom: .48rem;
+        h3 {
+            font-size: .26rem;
+            color: #454545;
+        }
+        .more {
+            font-size: .22rem;
+            a {
+                color: #666;
+            }
+        }
+    }
+    .pro-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        // align-content: space-between;
+        width: 5.19rem;
+        padding-left: .26rem;
+        li {
+            text-align: center;
+            a {
+                font-size: .24rem;
+            }
+            img {
+                margin: .24rem 0;
+            }
+            .one {
+                width: 1.4rem;
+                height: 1.5rem;
+            }
+            .two {
+                width: 1.4rem;
+                height: 1.5rem;
+            }
+            .three {
+                width: 1.4rem;
+                height: 1.5rem;
+            }
+            .four {
+                width: 1.4rem;
+                height: 1.5rem;
+            }
+            .five {
+                width: 0.69rem;
+                height: 1.5rem;
+            }
+            .six {
+                width: 1.3rem;
+                height: 1.5rem;
+            }
+        }
+    }
+    .nav {
+        margin-top: .8rem;
+    }
+    .list {
+        li {
+            a {
+                .first {
+                    width: 0.83rem;
+                    height: 1.46rem;
+                }
+                .second {
+                    width: 0.83rem;
+                    height: 1.46rem;
+                }
+                .third {
+                    width: 1.36rem;
+                    height: 1.46rem;
+                }
+            }
+        }
+        
+    }
+}

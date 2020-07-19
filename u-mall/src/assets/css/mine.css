@@ -1,0 +1,222 @@
+@import "reset.css";
+.container {
+  width: 7.5rem;
+  margin: 0 auto;
+  padding-top: 0.88rem;
+  background-color: #f1f1f1;
+}
+.wrap {
+  width: 6.9rem;
+  margin: 0 auto;
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  margin-left: -3.75rem;
+  height: 0.88rem;
+  width: 7.5rem;
+  background-color: #f26b11;
+  border-bottom: 1px solid #f26b11;
+  z-index: 999;
+}
+.header .wrap {
+  display: flex;
+  height: 0.88rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.header img {
+  width: 0.17rem;
+  height: 0.29rem;
+}
+.header h2 {
+  font-size: 0.36rem;
+  color: #fff;
+}
+.header .points span {
+  display: inline-block;
+  margin-left: 0.08rem;
+  width: 0.12rem;
+  height: 0.12rem;
+  background-color: #fff;
+  border-radius: 50%;
+}
+.content .member {
+  background-color: #f26b11;
+  padding-bottom: 0.27rem;
+  padding-top: 0.38rem;
+}
+.content .member .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.content .member .pic {
+  display: flex;
+  align-items: center;
+}
+.content .member .pic .circle {
+  width: 1.52rem;
+  height: 1.52rem;
+  border-radius: 50%;
+  border: 0.03rem solid #fff;
+  overflow: hidden;
+  margin-right: 0.2rem;
+}
+.content .member .pic .circle img {
+  width: 1.52rem;
+  height: 1.52rem;
+}
+.content .member .pic .txt p {
+  font-size: 0.3rem;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+.content .member .pic .txt span {
+  font-size: 0.22rem;
+  color: #180f12;
+}
+.content .member .sign a {
+  display: block;
+  width: 1.6rem;
+  height: 0.72rem;
+  line-height: 0.72rem;
+  font-size: 0.24rem;
+  color: #f26b11;
+  background-color: #fff;
+  text-align: center;
+  border-radius: 0.05rem;
+}
+.content .shop-nav {
+  background-color: #fff;
+  margin-bottom: 0.21rem;
+  padding-bottom: 0.32rem;
+}
+.content .shop-nav .icon-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.18rem;
+}
+.content .shop-nav .icon-nav li {
+  text-align: center;
+}
+.content .shop-nav .icon-nav li a {
+  font-size: 0.24rem;
+}
+.content .shop-nav .icon-nav li a img {
+  width: 0.35rem;
+  height: 0.32rem;
+  margin-bottom: 0.21rem;
+  margin-top: 0.34rem;
+}
+.content .lookup {
+  background-color: #fff;
+}
+.content .lookup .operate {
+  padding-bottom: 2.54rem;
+}
+.content .lookup .operate .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 1.11rem;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 0 0.36rem;
+}
+.content .lookup .operate .item .right {
+  display: flex;
+  align-items: center;
+}
+.content .lookup .operate .item .right img {
+  width: 0.33rem;
+  height: 0.38rem;
+  margin-right: 0.24rem;
+}
+.content .lookup .operate .item .right span {
+  font-size: 0.25rem;
+  color: #606060;
+}
+.content .lookup .operate .item .left img {
+  width: 0.14rem;
+  height: 0.24rem;
+}
+.content .lookup .operate .item1 .right img {
+  width: 0.33rem;
+  height: 0.36rem;
+}
+.content .lookup .operate .item1 .left span {
+  font-size: 0.22rem;
+  color: #f26b11;
+  vertical-align: middle;
+}
+.content .lookup .operate .item1 .left img {
+  margin-left: 0.21rem;
+}
+.content .lookup .operate .item2 .right img {
+  width: 0.45rem;
+  height: 0.32rem;
+  margin-left: -0.1rem;
+}
+.content .lookup .operate .item3 .right img {
+  width: 0.33rem;
+  height: 0.32rem;
+}
+.content .lookup .operate .item4 .right img {
+  width: 0.37rem;
+  height: 0.34rem;
+  margin-left: -0.04rem;
+}
+.fixed-menu {
+  padding-bottom: 0.1rem;
+  background-color: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.2rem;
+}
+.fixed-menu .con {
+  width: 7.5rem;
+  height: 1.2rem;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0px 0px 0.1rem #e0e0e0;
+}
+.fixed-menu .nav {
+  display: flex;
+  justify-content: space-between;
+  width: 6.3rem;
+  margin: 0 auto;
+  font-size: 0.22rem;
+  padding-top: 0.22rem;
+  line-height: 1.8;
+}
+.fixed-menu .nav a {
+  color: #999;
+  text-align: center;
+}
+.fixed-menu .nav a.active {
+  color: #f26b11;
+}
+.fixed-menu .nav a i {
+  display: block;
+  width: 0.58rem;
+  height: 0.58rem;
+  background-size: contain;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+.fixed-menu .nav a:first-child i {
+  background-image: url(../images/public/icon_8.jpg);
+}
+.fixed-menu .nav a:nth-child(2) i {
+  background-image: url(../images/public/icon_7.jpg);
+}
+.fixed-menu .nav a:nth-child(3) i {
+  background-image: url(../images/public/icon_5.jpg);
+}
+.fixed-menu .nav a:nth-child(3).active i {
+  background: url(../images/public/icon_10.jpg) no-repeat center;
+  background-size: contain;
+}

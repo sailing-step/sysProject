@@ -1,0 +1,415 @@
+@import "reset.css";
+
+body {
+  background-color: #f1f1f1;
+}
+
+.container {
+  width: 7.5rem;
+  margin: 0 auto;
+  background-color: #f1f1f1;
+  padding-top: 0.88rem;
+  padding-bottom: 1.3rem;
+}
+
+.wrap {
+  width: 7.1rem;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  margin-left: -3.75rem;
+  height: 0.88rem;
+  width: 7.5rem;
+  background-color: #f26b11;
+  z-index: 999;
+}
+
+.header .wrap {
+  height: 0.88rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.header .wrap .arrow {
+  margin-left: 0.1rem;
+}
+
+.header .wrap .arrow img {
+  width: 0.16rem;
+  height: 0.28rem;
+}
+
+.header .wrap p {
+  font-size: 0.32rem;
+  color: #fff;
+}
+
+.header .wrap .points {
+  margin-right: 0.1rem;
+}
+
+.header .wrap .points span {
+  float: left;
+  margin-left: 0.1rem;
+  width: 0.13rem;
+  height: 0.13rem;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.content .contact {
+  height: 1.52rem;
+  padding: 0 0.22rem;
+  background-color: #fff;
+}
+
+.content .contact .txt {
+  float: left;
+  font-size: 0.26rem;
+  color: #646464;
+  width: 6.7rem;
+  padding-top: 0.26rem;
+}
+
+.content .contact .txt .user span {
+  float: right;
+}
+
+.content .contact .txt .address {
+  margin-top: 0.22rem;
+  display: flex;
+}
+
+.content .contact .txt .address span {
+  display: inline-block;
+  width: 5.4rem;
+  line-height: 0.3rem;
+}
+
+.content .contact .edit {
+  float: right;
+  margin-top: 0.63rem;
+}
+
+.content .contact .edit img {
+  width: 0.19rem;
+  height: 0.26rem;
+}
+
+.content .mode {
+  padding: 0 0.28rem;
+  background-color: #fff;
+  margin-bottom: 0.12rem;
+}
+
+.content .mode .item {
+  display: flex;
+  padding: 0.22rem 0;
+}
+
+.content .mode .item img {
+  width: 1.02rem;
+  height: 1.02rem;
+  margin-right: 0.28rem;
+}
+
+.content .mode .item .txt {
+  font-size: 0.22rem;
+}
+
+.content .mode .item .txt h3 {
+  color: #5c5c5c;
+  line-height: 0.46rem;
+  white-space: nowrap;
+}
+
+.content .mode .item .txt p {
+  color: #afafaf;
+}
+
+.content .mode .item .price {
+  font-size: 0.28rem;
+  color: #e72734;
+  margin-left: 2.9rem;
+  margin-top: 0.2rem;
+}
+
+.content .mode .item .price span {
+  font-size: 0.19rem;
+}
+
+.content .mode .amount {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.38rem;
+}
+
+.content .mode .amount p {
+  font-size: 0.24rem;
+  color: #626262;
+  line-height: 0.64rem;
+}
+
+.content .mode .amount .number {
+  display: flex;
+  width: 2.9rem;
+}
+
+.content .mode .amount .number i {
+  display: block;
+  width: 0.73rem;
+  height: 0.63rem;
+  border: 1px solid #515151;
+  background: url(../images/detail_images/icon-sub.jpg) no-repeat center;
+  border-radius: 0.05rem !important;
+}
+
+.content .mode .amount .number em {
+  display: block !important;
+  width: 0.73rem !important;
+  height: 0.63rem !important;
+  border: 1px solid #515151;
+  background: url(../images/detail_images/icon-plus.jpg) no-repeat center !important;
+  border-radius: 0.05rem !important;
+}
+
+.content .mode .amount .number span {
+  display: block !important;
+  width: 1.17rem !important;
+  height: 0.64rem !important;
+  border: 1px solid #515151;
+  border-radius: 0.05rem;
+  text-align: center;
+  font-size: 0.26rem;
+  line-height: 0.64rem;
+  color: #454545;
+  margin: 0 0.12rem;
+}
+
+.content .mode .way {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #f0f0f0;
+}
+
+.content .mode .way .carry {
+  font-size: 0.24rem;
+  color: #626262;
+  line-height: 0.96rem;
+}
+
+.content .cheapen {
+  background-color: #fff;
+  margin-bottom: 0.1rem;
+}
+
+.content .cheapen .coupon {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.02rem solid #f1f1f1;
+  padding: 0 0.28rem;
+}
+
+.content .cheapen .coupon p {
+  font-size: 0.24rem;
+  line-height: 1.01rem;
+  color: #5d5d5d;
+}
+
+.content .cheapen .integration {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.28rem;
+}
+
+.content .cheapen .integration .use {
+  font-size: 0.24rem;
+  color: #5d5d5d;
+  line-height: 1.01rem;
+}
+
+.content .cheapen .integration .btn {
+  margin-left: 2.2rem;
+}
+
+.content .cheapen .integration .btn .score {
+  font-size: 0.23rem;
+  width: 1.49rem;
+  height: 0.71rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 0.05rem;
+  text-align: center;
+  margin-right: 0.05rem;
+  color: #e4e4e4;
+}
+
+.content .cheapen .integration .btn .orange {
+  font-size: 0.23rem;
+  width: 0.74rem;
+  height: 0.73rem;
+  border-radius: 0.05rem;
+  background-color: #f26b11;
+}
+
+.content .cheapen .integration .usable {
+  font-size: 0.22rem;
+  color: #7f7f7f;
+}
+
+.content .cheapen .integration .usable span {
+  font-size: 0.2rem;
+  color: #d2242d;
+}
+
+.content .settle-amount {
+  background-color: #fff;
+  padding-bottom: 0.16rem;
+  padding: 0 0.24rem;
+  padding-bottom: 1.72rem;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.content .settle-amount .price-list {
+  padding-bottom: 0.08rem;
+  padding-top: 0.34rem;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.content .settle-amount .price-list .item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+
+.content .settle-amount .price-list .item .east {
+  font-size: 0.24rem;
+  color: #5c5c5c;
+}
+
+.content .settle-amount .price-list .item .west {
+  font-size: 0.2rem;
+  color: #d03636;
+}
+
+.content .settle-amount .last-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.52rem;
+}
+
+.content .settle-amount .last-step p {
+  font-size: 0.37rem;
+  color: #5a5a5a;
+  margin-bottom: 0.44rem;
+  align-self: flex-end;
+}
+
+.content .settle-amount .last-step p span {
+  font-size: 0.31rem;
+  color: #d73135;
+}
+
+.content .settle-amount .last-step .submit {
+  position: relative;
+  top: 1.5rem;
+  z-index: 0;
+}
+
+.content .settle-amount .last-step .submit a {
+  display: inline-block;
+  width: 3.58rem;
+  line-height: 1.12rem;
+  font-size: 0.3rem;
+  color: #fff;
+  background-color: #f26b11;
+  text-align: center;
+  border-radius: 0.05rem;
+}
+
+.fixed-menu {
+  border-top: 1px solid #f1f1f1;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.3rem;
+}
+
+.fixed-menu .con {
+  width: 7.5rem;
+  height: 1.3rem;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+.fixed-menu .nav {
+  display: flex;
+  justify-content: space-between;
+  width: 6.3rem;
+  margin: 0 auto;
+  font-size: 0.22rem;
+  padding-top: 0.22rem;
+  line-height: 1.8;
+}
+
+.fixed-menu .nav a {
+  color: #999;
+  text-align: center;
+}
+
+.fixed-menu .nav a:active {
+  color: #ee6018;
+}
+
+.fixed-menu .nav a:active:first-child i {
+  background: url(../images/public/icon_6.jpg) no-repeat center bottom;
+  background-size: contain;
+}
+
+.fixed-menu .nav a:active:nth-child(2) i {
+  background: url(../images/public/icon_9.jpg) no-repeat center bottom;
+  background-size: contain;
+}
+
+.fixed-menu .nav a:active:nth-child(3) i {
+  background: url(../images/public/icon_10.jpg) no-repeat center bottom;
+  background-size: contain;
+}
+
+.fixed-menu .nav a i {
+  display: block;
+  width: 0.58rem;
+  height: 0.58rem;
+  background-size: contain;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+
+.fixed-menu .nav a:first-child i {
+  background-image: url(../images/public/icon_8.jpg);
+}
+
+.fixed-menu .nav a:nth-child(2) i {
+  margin-left: 0.07rem;
+  background-image: url(../images/public/icon_7.jpg);
+}
+
+.fixed-menu .nav a:nth-child(2).active {
+  color: #f26b11;
+}
+
+.fixed-menu .nav a:nth-child(2).active i {
+  background: url(../images/public/icon_9.jpg) no-repeat center bottom;
+  background-size: contain;
+}
+
+.fixed-menu .nav a:nth-child(3) i {
+  background-image: url(../images/public/icon_5.jpg);
+}
