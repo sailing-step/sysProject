@@ -10,11 +10,15 @@
         label-width="80px"
         class="demo-ruleForm login"
       >
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="userInfo.name" clearable></el-input>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="userInfo.username" clearable></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input v-model="userInfo.pass" show-password clearable></el-input>
+        <el-form-item label="密码" prop="password">
+          <el-input
+            v-model="userInfo.password"
+            show-password
+            clearable
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="login('ruleForm')">提交</el-button>
@@ -25,19 +29,21 @@
 </template>
 
 <script>
+// 获取登录接口
+import { getuserLogin } from "../../util/axios";
 export default {
   data() {
     return {
       userInfo: {
-        name: "",
-        pass: ""
+        username: "",
+        password: ""
       },
       rules: {
-        name: [
+        username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
           { min: 2, max: 16, message: "长度在 2 到 16 个字符", trigger: "blur" }
         ],
-        pass: [
+        password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 16, message: "请输入6-16正确密码", trigger: "blur" }
         ]
@@ -51,13 +57,18 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           //调取登录接口
-          if (this.userInfo.name == "admin" && this.userInfo.pass == "123456") {
-            this.$message.success("登录成功");
-            //登录成功之后就要跳转到index
-            this.$router.push("/home");
-          } else {
-            this.$message.error("用户名或者密码错误");
-          }
+          getuserLogin(this.userInfo).then(res => {
+            console.log(res, "返回信息");
+            if (res.data.code == 200) {
+              this.$message.success(res.data.msg);
+              //把登录信息存储到本地存储中
+              sessionStorage.setItem("userInfo", JSON.stringify(res.data.list));
+              //登录成功之后就要跳转到index
+              this.$router.push("/home");
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          });
         } else {
           console.log("error submit!!");
           return false;

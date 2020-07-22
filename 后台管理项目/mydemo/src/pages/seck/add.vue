@@ -1,58 +1,21 @@
 <template>
   <div>
-    <!-- 面包屑导航 -->
-    <bread-crumb></bread-crumb>
-    <!-- 按钮 -->
-    <div>
-      <el-button type="primary" size="small" @click="add">添加</el-button>
-    </div>
-    <!-- 表格信息 -->
-    <el-table
-      :data="getStateMenuList"
-      border
-      style="width: 100%"
-      row-key="id"
-      :tree-props="{ children: 'children' }"
-    >
-      <el-table-column prop="id" label="菜单编号"></el-table-column>
-      <el-table-column prop="title" label="菜单名称"></el-table-column>
-      <el-table-column prop="pid" label="上级菜单"></el-table-column>
-      <el-table-column prop="icon" label="菜单图标"></el-table-column>
-      <el-table-column prop="url" label="菜单地址"></el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="item">
-          <el-tag v-if="item.row.status == 1" type="success">启动</el-tag>
-          <el-tag v-if="item.row.status == 2" type="danger">禁用</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="item">
-          <el-button type="primary" size="small" @click="update(item.row.id)"
-            >编辑</el-button
-          >
-          <el-button type="danger" size="small" @click="del(item.row.id)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 弹框内容 -->
     <el-dialog
-      :title="isAdd ? '菜单添加' : '菜单编辑'"
-      :visible.sync="dialogIsShow"
+      :title="addInfo.isAdd ? '菜单添加' : '菜单编辑'"
+      :visible.sync="addInfo.dialogIsShow"
       center
       :before-close="cancel"
     >
       <el-form :model="menuInfo" :rules="rules" ref="menuInfo">
         <el-form-item
-          label="菜单名称"
+          label="菜单名称:"
           :label-width="formLabelWidth"
           prop="title"
         >
           <el-input v-model="menuInfo.title"></el-input>
         </el-form-item>
         <el-form-item
-          label="上级菜单"
+          label="上级菜单:"
           :label-width="formLabelWidth"
           prop="pid"
           placeholder="请选择菜单"
@@ -68,7 +31,7 @@
             >
           </el-select>
         </el-form-item>
-        <el-form-item label="菜单类型" :label-width="formLabelWidth">
+        <el-form-item label="菜单类型:" :label-width="formLabelWidth">
           <el-radio
             :disabled="menuInfo.pid != 0"
             v-model="menuInfo.type"
@@ -84,23 +47,42 @@
         </el-form-item>
         <el-form-item
           v-if="menuInfo.type == 1"
-          label="菜单图标"
+          label="菜单图标:"
           :label-width="formLabelWidth"
         >
-          <el-input
-            v-model="menuInfo.icon"
+          <el-select
             :disabled="menuInfo.pid != 0"
-          ></el-input>
+            v-model="menuInfo.icon"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in iconList"
+              :key="item"
+              :label="item"
+              :value="item"
+              >{{ item }}</el-option
+            >
+          </el-select>
         </el-form-item>
         <el-form-item
           v-if="menuInfo.type == 2"
-          label="菜单地址"
+          label="菜单地址:"
           :label-width="formLabelWidth"
+          placeholder="请选择菜单地址"
         >
-          <el-input
-            v-model="menuInfo.url"
+          <el-select
             :disabled="menuInfo.pid == 0"
-          ></el-input>
+            v-model="menuInfo.url"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in urlList"
+              :key="item"
+              :label="item"
+              :value="item"
+              >{{ item }}</el-option
+            >
+          </el-select>
         </el-form-item>
 
         <el-form-item label="状态" :label-width="formLabelWidth">
@@ -110,7 +92,10 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button v-if="isAdd" type="primary" @click="subInfo('menuInfo')"
+        <el-button
+          v-if="addInfo.isAdd"
+          type="primary"
+          @click="subInfo('menuInfo')"
           >新 增</el-button
         >
         <el-button v-else type="primary" @click="subInfo('menuInfo')"
@@ -122,22 +107,14 @@
 </template>
 
 <script>
-// 辅助性函数
-import { mapActions, mapGetters } from "vuex";
 // 引入菜单接口
-import {
-  // getMenuList,
-  getMenuAdd,
-  getMenuInfo,
-  getMenuEdit,
-  getMenuDelete
-} from "../../util/axios";
-import breadCrumb from "../common/breadcrumb";
+import { getMenuAdd, getMenuInfo, getMenuEdit } from "../../util/axios";
+import { mapGetters, mapActions } from "vuex";
 export default {
+  props: ["addInfo"],
   data() {
     return {
       editId: 0,
-      isAdd: true,
       formLabelWidth: "100PX", // label宽度
       menuInfo: {
         pid: 0, //上级分类编号
@@ -147,14 +124,31 @@ export default {
         type: "1", //类型1目录2菜单
         status: "1"
       },
-      dialogIsShow: false,
       rules: {
         title: [
           { required: true, message: "请输入菜单名称", trigger: "blur" },
           { min: 2, max: 6, message: "长度在 2 到 6 个字符", trigger: "blur" }
         ],
         pid: [{ required: true, message: "请选择菜单", trigger: "blur" }]
-      }
+      },
+      urlList: [
+        //用于管理所有组件的路由
+        "/menu",
+        "/user",
+        "/goods",
+        "/role",
+        "/sort",
+        "/specs",
+        "/member",
+        "/banner",
+        "/seck"
+      ],
+      iconList: [
+        "el-icon-s-tools",
+        "el-icon-setting",
+        "el-icon-s-goods",
+        " el-icon-goods"
+      ]
     };
   },
   computed: {
@@ -163,15 +157,16 @@ export default {
   mounted() {
     // 组件一加载，就调取接口
     // 触发才调取vuex中的菜单列表
-
-    // this.getMenuList();
     this.getActionMenuList();
   },
   methods: {
+    ...mapActions(["getActionMenuList"]),
     // 关闭弹框事件
     cancel() {
+      // 注意props属性只能用于读取，不能设置
       this.reset();
-      this.dialogIsShow = false;
+      // 修改属性，子传父
+      this.$emit("cancel", false);
     },
     reset() {
       this.menuInfo = {
@@ -183,38 +178,10 @@ export default {
         status: "1"
       };
     },
-    // 封装一个获取菜单列表事件
-    // getMenuList() {
-    //   getMenuList({ istree: 1 })
-    //     .then(res => {
-    //       if (res.data.code == 200) {
-    //         this.tableData = res.data.list;
-    //       }
-    //       console.log(res, "响应结果");
-    //     })
-    //     .catch(err => {
-    //       console.log(err, "错误拦截");
-    //     });
-    // },
-    ...mapActions(["getActionMenuList"]),
-    add() {
-      // console.log("出现弹框");
-      this.dialogIsShow = true;
-      this.isAdd = true;
-    },
     update(id) {
-      // console.log("弹出编辑窗口");
-      this.dialogIsShow = true;
-      this.isAdd = false;
-      // 编辑给editId赋值
+      //点击编辑按钮出现弹框并携带数据
       this.editId = id;
       // 调取菜单查询一条数据
-      // this.$http
-      //   .get("/api/api/menuinfo", {
-      //     params: {
-      //       id
-      //     }
-      //   })
       getMenuInfo({ id }).then(res => {
         if (res.data.code == 200) {
           console.log(res);
@@ -224,45 +191,17 @@ export default {
         }
       });
     },
-    del(id) {
-      console.log(id, "删除事件");
-      this.$confirm("你确定删除这条数据吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          // this.$http.post("/api/api/menudelete", { id })
-          getMenuDelete({ id }).then(res => {
-            if (res.data.code == 200) {
-              this.getActionMenuList(); // 删除成功重新获取数据渲染
-              this.$message.success(res.data.msg);
-            } else {
-              this.$message.error(res.data.msg);
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
     // 确定添加或者更新事件
     subInfo(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           //根据isAdd状态去判断执行接口
-          if (this.isAdd) {
+          if (this.addInfo.isAdd) {
             //调取添加接口
-            // this.$http.post("/api/api/menuadd", this.menuInfo)
             getMenuAdd(this.menuInfo).then(res => {
               if (res.data.code == 200) {
-                //关闭弹框
-                this.dialogIsShow = false;
-                //清空输入框
-                this.reset();
+                //关闭弹框  清空输入框
+                this.cancel();
                 //添加成功重新查询列表
                 this.getActionMenuList();
                 this.$message.success(res.data.msg);
@@ -275,15 +214,12 @@ export default {
           } else {
             // id是必填项
             let data = this.menuInfo; // menuInfo里面没有id属性
-            data.id = this.editId; // 添加id属性后传入后台
+            data.id = this.editId;
             // 调取更新接口
-            // this.$http.post("/api/api/menuedit", data)
             getMenuEdit(data).then(res => {
               if (res.data.code == 200) {
-                //关闭弹框
-                this.dialogIsShow = false;
-                //清空输入框
-                this.reset();
+                //关闭弹框  清空输入框
+                this.cancel();
                 //添加成功重新查询列表
                 this.getActionMenuList();
                 this.$message.success(res.data.msg);
@@ -300,18 +236,8 @@ export default {
         }
       });
     }
-  },
-  components: {
-    breadCrumb
   }
 };
 </script>
 
-<style lang="stylus" scoped>
-.el-button {
-  margin-bottom: 10px;
-}
-.el-input {
-    width: 85%;
-}
-</style>
+<style lang="" scoped></style>

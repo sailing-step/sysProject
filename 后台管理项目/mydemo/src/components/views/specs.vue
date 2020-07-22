@@ -7,10 +7,16 @@
       <el-button type="primary" size="small" @click="add">添加</el-button>
     </div>
     <!-- 表格信息 -->
-    <el-table :data="getStateUserList" border style="width: 100%">
-      <el-table-column prop="uid" label="用户编号"></el-table-column>
-      <el-table-column prop="username" label="用户名称"></el-table-column>
-      <el-table-column prop="rolename" label="所属角色"></el-table-column>
+    <el-table :data="getStateSpecsList" border style="width: 100%">
+      <el-table-column prop="id" label="规格编号"></el-table-column>
+      <el-table-column prop="specsname" label="规格名称"></el-table-column>
+      <el-table-column prop="attrs" label="规格属性">
+        <template slot-scope="item">
+          <el-tag v-for="val in item.row.attrs" :key="val" type="info">{{
+            val
+          }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="item">
           <el-tag v-if="item.row.status == 1" type="success">启用</el-tag>
@@ -19,8 +25,12 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="item">
-          <el-button size="small" type="primary" @click="update(item.row.uid)">编辑</el-button>
-          <el-button size="small" type="danger" @click="del(item.row.uid)">删除</el-button>
+          <el-button size="small" type="primary" @click="update(item.row.id)"
+            >编辑</el-button
+          >
+          <el-button size="small" type="danger" @click="del(item.row.id)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -33,38 +43,44 @@
       @current-change="getPage"
     ></el-pagination>
     <!--弹出内容  -->
-    <el-dialog :title="isAdd ? '添加管理员' : '修改管理员'" :visible.sync="dialogIsShow" center>
-      <el-form :model="userInfo" :rules="rules" ref="userInfo">
+    <el-dialog
+      :title="isAdd ? '添加商品规格' : '修改商品规格'"
+      :visible.sync="dialogIsShow"
+      center
+    >
+      <el-form :model="specsInfo" :rules="rules" ref="specsInfo">
         <el-form-item
-          label="所属角色"
+          label="规格名称"
           :label-width="formLabelWidth"
-          placeholder="请选择所属角色"
-          prop="roleid"
+          prop="specsname"
         >
-          <el-select v-model="userInfo.roleid" placeholder="请选择">
-            <el-option
-              v-for="item in getStateRoleList"
-              :key="item.id"
-              :label="item.rolename"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="specsInfo.specsname" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户名称" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="userInfo.username" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input v-model="userInfo.password" autocomplete="off"></el-input>
+        <el-form-item
+          v-for="(item, index) in specsArr"
+          label="规格属性"
+          :key="item.value"
+          :label-width="formLabelWidth"
+        >
+          <el-input style="width:70%" v-model="item.value"></el-input>
+          <el-button v-if="index == 0" type="primary" @click="addSpecs"
+            >新增规格属性</el-button
+          >
+          <el-button v-else @click="removeSpecs(item)">删除</el-button>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-radio v-model="userInfo.status" label="1">启用</el-radio>
-          <el-radio v-model="userInfo.status" label="2">禁用</el-radio>
+          <el-radio v-model="specsInfo.status" label="1">启用</el-radio>
+          <el-radio v-model="specsInfo.status" label="2">禁用</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogIsShow = false">取 消</el-button>
-        <el-button v-if="isAdd" type="primary" @click="subInfo('userInfo')">新 增</el-button>
-        <el-button v-else type="primary" @click="subInfo('userInfo')">更 新</el-button>
+        <el-button v-if="isAdd" type="primary" @click="subInfo('specsInfo')"
+          >新 增</el-button
+        >
+        <el-button v-else type="primary" @click="subInfo('specsInfo')"
+          >更 新</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -73,16 +89,22 @@
 <script>
 import breadCrumb from "../common/breadcrumb";
 import {
-  getuserAdd,
-  getuserCount,
-  getuserEdit,
-  getuserInfo,
-  getuserDelete
+  getspecsAdd,
+  getspecsCount,
+  getspecsEdit,
+  getspecsInfo,
+  getspecsDelete
 } from "../../util/axios";
 import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      // 动态表单域
+      specsArr: [
+        {
+          value: ""
+        }
+      ],
       editId: 0,
       // 接收总条目
       count: 0,
@@ -92,79 +114,92 @@ export default {
         page: 1 // 一共有多少页面。初始值为1
       },
       isAdd: true, // 添加
-      userInfo: {
-        uid: 0, // 用户编号
-        roleid: 0,
-        username: "",
-        password: "",
+      specsInfo: {
+        specsname: "",
+        attrs: "",
         status: "1"
       },
       dialogIsShow: false, //是否出现弹框
       formLabelWidth: "100px",
       rules: {
-        username: [
+        specsname: [
           {
             required: true,
-            message: "请输入用户名称",
-            trigger: "blur"
-          },
-          {
-            min: 2,
-            max: 16,
-            message: "长度在 2 到 16 个字符",
+            message: "请输入规格名称",
             trigger: "blur"
           }
-        ],
-        roleid: [
-          {
-            required: true,
-            message: "请选择所属角色",
-            trigger: "blur"
-          }
+          // {
+          //   min: 2,
+          //   max: 16,
+          //   message: "长度在 2 到 16 个字符",
+          //   trigger: "blur"
+          // }
         ]
       }
     };
   },
   computed: {
-    ...mapGetters(["getStateUserList", "getStateRoleList"])
+    ...mapGetters(["getStateSpecsList"])
   },
   mounted() {
     this.getCount();
-    // this.$store.dispatch("getActionUserList", this.pageInfo);
   },
   methods: {
-    // ...mapActions(["getActionUserList"]), 传参数不能用辅助性函数
-    ...mapActions(["getActionRoleList"]),
+    // 添加表单
+    addSpecs() {
+      // 根据产品需求对添加规格属性进行限制,最多添加6个规格
+      if (this.specsArr.length <= 6) {
+        // 直接在规格属性数组中添加对象
+        this.specsArr.push({
+          value: ""
+        });
+      } else {
+        this.$message.warning("最多添加6个规格！");
+      }
+    },
+    // 移除属性
+    removeSpecs(item) {
+      var index = this.specsArr.indexOf(item);
+      if (index !== -1) {
+        this.specsArr.splice(index, 1);
+      }
+    },
     reset() {
-      this.userInfo = {
-        uid: 0,
-        roleid: 0,
-        username: "",
-        password: "",
+      this.specsInfo = {
+        specsname: "",
+        // attrs: "",
         status: "1"
       };
+      // 清除动态表单
+      this.specsArr = [{ value: "" }];
     },
     add() {
       this.dialogIsShow = true;
       this.isAdd = true;
-      // 调取角色列表
-      this.getActionRoleList();
     },
-    update(uid) {
+    update(id) {
       this.dialogIsShow = true;
       this.isAdd = false;
-      this.editId = uid;
-      getuserInfo({ uid }).then(res => {
+      this.editId = id;
+      getspecsInfo({ id }).then(res => {
         if (res.data.code == 200) {
           console.log(res);
           //对返回的数据类型进行转化
-          this.userInfo = res.data.list;
-          this.userInfo.status = this.userInfo.status.toString();
-          // this.userInfo.uid = this.userInfo.uid.toString()
+          this.specsInfo = res.data.list[0];
+          this.specsInfo.attrs.map((item, i) => {
+            if (i == 0) {
+              this.specsArr[0].value = item;
+            } else {
+              this.specsArr.push({
+                value: item
+              });
+            }
+          });
+          this.specsInfo.status = this.specsInfo.status.toString();
         }
       });
     },
-    del(uid) {
+    del(id) {
       this.$confirm("你确定要删除这条数据吗", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -172,7 +207,7 @@ export default {
       })
         .then(() => {
           //调取删除逻辑
-          getuserDelete({ uid }).then(res => {
+          getspecsDelete({ id }).then(res => {
             if (res.data.code == 200) {
               //重新调取接口列表
               this.getCount();
@@ -192,11 +227,21 @@ export default {
     subInfo(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.userInfo, "管理员信息");
+          // console.log(this.specsInfo, "表单数据");
+          // 对提交数据进行转化 '红色，白色，黑色'
+          let data = this.specsInfo;
+          // data.attrs = this.specsArr
+          // 对规格属性数组进行映射 映射成一个新数组 新数组有value
+          let arr = this.specsArr.map(item => {
+            return item.value;
+          });
+          // console.log(arr, "新数组");
+          data.attrs = arr ? arr.join(",") : "";
+          // console.log(data);
           // 根据isAdd的状态判断执行接口;
           if (this.isAdd) {
             // 调取添加接口
-            getuserAdd(this.userInfo).then(res => {
+            getspecsAdd(this.specsInfo).then(res => {
               if (res.data.code == 200) {
                 //关闭弹框
                 this.dialogIsShow = false;
@@ -212,10 +257,10 @@ export default {
               }
             });
           } else {
-            let data = this.userInfo;
-            data.uid = this.editId;
+            let data = this.specsInfo;
+            data.id = this.editId;
             //调取更新接口
-            getuserEdit(data).then(res => {
+            getspecsEdit(data).then(res => {
               if (res.data.code == 200) {
                 //关闭弹框
                 this.dialogIsShow = false;
@@ -237,18 +282,18 @@ export default {
         }
       });
     },
-    // 封装获取总条目接口
+    //封装获取总条目接口
     getCount() {
-      getuserCount().then(res => {
+      //调取总条数接口
+      getspecsCount().then(res => {
         if (res.data.code == 200) {
           this.count = res.data.list[0].total;
-          // 如果当前不是第一页，并且只有一条数据，我们就让页面的数量--
-          // 当前页面的数据在vuex里面,当前getStateUserList.length ==1 ,当前页面只有一条数据
-          if (this.pageInfo.page != 1 && this.getStateUserList.length == 1) {
+          //如果当前不是第一页并且只有一条数据，我就让页面数量--
+          if (this.pageInfo.page != 1 && this.getStateSpecsList.length == 1) {
             this.pageInfo.page--;
           }
-          // 调取获取用户接口列表的行动
-          this.$store.dispatch("getActionUserList", this.pageInfo);
+          //调取获取商品规格接口列表的行动
+          this.$store.dispatch("getActionSpecsList", this.pageInfo);
         }
       });
     },
@@ -258,7 +303,7 @@ export default {
       console.log(n);
       this.pageInfo.page = n;
       // 重新调取列表页面
-      this.$store.dispatch("getActionUserList", this.pageInfo);
+      this.$store.dispatch("getActionSpecsList", this.pageInfo);
     }
   },
   components: {
@@ -279,5 +324,10 @@ export default {
 .el-pagination {
   float: right;
   margin-top: 10px;
+}
+
+.newAdd {
+  // width: 100px;
+  margin-left: 10px;
 }
 </style>

@@ -15,11 +15,7 @@
             <i class="el-icon-menu"></i>
             <span slot="title">首页</span>
           </el-menu-item>
-          <el-submenu
-            :index="item.id.toString()"
-            v-for="item in getStateMenuList"
-            :key="item.id"
-          >
+          <el-submenu :index="item.id.toString()" v-for="item in getStateMenuList" :key="item.id">
             <template slot="title">
               <i :class="item.icon"></i>
               <span>{{ item.title }}</span>
@@ -28,8 +24,7 @@
               :index="menu.url"
               v-for="menu in item.children"
               :key="menu.id"
-              >{{ menu.title }}</el-menu-item
-            >
+            >{{ menu.title }}</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-col>
@@ -52,7 +47,7 @@ export default {
   mounted() {
     //   组件挂载
     // 更改选中的默认值
-    console.log(this.$route, "路由元信息");
+    // console.log(this.$route, "路由元信息");
     // 地址是什么就默认选中什么
     this.defaultActive = this.$route.path;
     // 页面一加载就调取菜单列表

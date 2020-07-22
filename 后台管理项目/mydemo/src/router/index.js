@@ -13,7 +13,7 @@ export default new Router({
       children: [
         {
           path: '/menu',
-          component: () => import('@/components/views/menu'),
+          component: () => import('@/pages/menu/menu'),
           meta: {//自定义对象
             name: '菜单管理'
           }
@@ -27,7 +27,7 @@ export default new Router({
         },
         {
           path: '/goods',
-          component: () => import('@/components/views/goods'),
+          component: () => import('@/pages/goods/goods'),
           meta: {//自定义对象
             name: '商品管理'
           }
@@ -40,8 +40,8 @@ export default new Router({
           }
         },
         {
-          path: '/size',
-          component: () => import('@/components/views/size'),
+          path: '/specs',
+          component: () => import('@/components/views/specs'),
           meta: {//自定义对象
             name: '商品规格'
           }
@@ -58,9 +58,27 @@ export default new Router({
           }
         },
         {
-          path: '/demo',
-          component: () => import('@/components/views/demo')
+          path: '/member',
+          component: () => import('@/pages/member/member'),
+          meta: {
+            name: '会员管理'
+          }
         },
+        {
+          path: '/banner',
+          component: () => import('@/pages/banner/banner'),
+          meta: {
+            name: '轮播图管理'
+          }
+        },
+        {
+          path: '/seck',
+          component: () => import('@/pages/seck/seck'),
+          meta: {
+            name: '限时秒杀管理'
+          }
+        },
+
         {
           path: '',
           redirect: '/home'
