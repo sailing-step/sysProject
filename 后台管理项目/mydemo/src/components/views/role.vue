@@ -18,24 +18,36 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="item">
-          <el-button size="small" type="primary" @click="update(item.row.id)">编辑</el-button>
-          <el-button size="small" type="danger" @click="del(item.row.id)">删除</el-button>
+          <el-button size="small" type="primary" @click="update(item.row.id)"
+            >编辑</el-button
+          >
+          <el-button size="small" type="danger" @click="del(item.row.id)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 弹出内容 -->
     <el-dialog
-      :title="isAdd ? '角色添加': '角色编辑'"
+      :title="isAdd ? '角色添加' : '角色编辑'"
       :visible.sync="dialogIsShow"
       center
       :before-close="cancel"
     >
       <el-form :model="menuInfo" :rules="rules" ref="menuInfo">
-        <el-form-item label="角色名称" :label-width="formLabelWidth" prop="rolename">
+        <el-form-item
+          label="角色名称"
+          :label-width="formLabelWidth"
+          prop="rolename"
+        >
           <el-input v-model="menuInfo.rolename"></el-input>
         </el-form-item>
-        <el-form-item label="角色权限" :label-width="formLabelWidth" prop="rolename">
+        <el-form-item
+          label="角色权限"
+          :label-width="formLabelWidth"
+          prop="rolename"
+        >
           <el-tree
             :data="getStateMenuList"
             show-checkbox
@@ -44,6 +56,7 @@
             ref="tree"
             :props="defaultProps"
             :default-checked-keys="defaultKey"
+            check-strictly
           ></el-tree>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
@@ -53,8 +66,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button v-if="isAdd" type="primary" @click="subInfo('menuInfo')">新 增</el-button>
-        <el-button v-else type="primary" @click="subInfo('menuInfo')">更 新</el-button>
+        <el-button v-if="isAdd" type="primary" @click="subInfo('menuInfo')"
+          >新 增</el-button
+        >
+        <el-button v-else type="primary" @click="subInfo('menuInfo')"
+          >更 新</el-button
+        >
       </div>
     </el-dialog>
   </div>

@@ -16,7 +16,11 @@ import './assets/css/reset.css'
 // import axios from 'axios'
 // 挂载到Vue原型上
 // Vue.prototype.$http = axios
-
+// 全局引入eChart
+// import ehhart from 'echarts'
+// Vue.prototype.$echart = echart
+// 设定一个服务器地址，用于文件上传
+Vue.prototype.$imgUrl = 'http://localhost:3000'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

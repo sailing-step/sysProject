@@ -4,7 +4,8 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -95,3 +96,19 @@ export default new Router({
     },
   ]
 })
+// 
+router.beforeEach((to, from, next) => {
+  // 如果跳转的是登录页，就继续
+  if (to.path == '/login') {
+    next()
+    return
+  }
+  // 如果缓存没数据，就重新登录
+  if (!sessionStorage.getItem('userInfo')) {
+    next('/login')
+  }
+  // 如果你缓存有值，你就可以继续执行
+  next()
+})
+
+export default router

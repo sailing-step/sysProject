@@ -11,7 +11,11 @@
       <el-table-column prop="goodsname" label="商品名称"></el-table-column>
       <el-table-column prop="price" label="商品价格"></el-table-column>
       <el-table-column prop="market_price" label="市场价格"></el-table-column>
-      <el-table-column prop="img" label="图片"></el-table-column>
+      <el-table-column prop="img" label="图片">
+        <template slot-scope="item">
+          <img class="imgInfo" :src="$imgUrl + item.row.img" alt="" />
+        </template>
+      </el-table-column>
       <el-table-column prop="isnew" label="是否新品">
         <template slot-scope="item">
           <el-tag v-if="item.row.isnew == 1" type="success">是</el-tag>
@@ -94,7 +98,7 @@ export default {
         .then(() => {
           getgoodsDelete({ id }).then(res => {
             if (res.data.code == 200) {
-              this.getActionGoodsList(); // 删除成功重新获取数据渲染
+              this.getCount(); // 删除成功重新获取数据渲染
               this.$message.success(res.data.msg);
             } else {
               this.$message.error(res.data.msg);
@@ -137,5 +141,8 @@ export default {
 .el-pagination {
   float: right;
   margin-top: 10px;
+}
+.imgInfo{
+    width: 100px;
 }
 </style>

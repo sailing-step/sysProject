@@ -1,93 +1,91 @@
 <template>
   <div>
     <el-dialog
-      :title="addInfo.isAdd ? '菜单添加' : '菜单编辑'"
+      :title="addInfo.isAdd ? '添加秒杀' : '编辑秒杀'"
       :visible.sync="addInfo.dialogIsShow"
       center
       :before-close="cancel"
     >
-      <el-form :model="menuInfo" :rules="rules" ref="menuInfo">
+      <el-form
+        :model="seckInfo"
+        :rules="rules"
+        ref="seckInfo"
+        label-width="100px"
+      >
         <el-form-item
-          label="菜单名称:"
+          label="活动名称:"
           :label-width="formLabelWidth"
           prop="title"
         >
-          <el-input v-model="menuInfo.title"></el-input>
+          <el-input v-model="seckInfo.title"></el-input>
+        </el-form-item>
+        <el-form-item label="活动时间:" :label-width="formLabelWidth">
+          <el-time-picker
+            is-range
+            v-model="value"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            placeholder="选择时间范围"
+          >
+          </el-time-picker>
         </el-form-item>
         <el-form-item
-          label="上级菜单:"
+          label="一级分类:"
           :label-width="formLabelWidth"
-          prop="pid"
-          placeholder="请选择菜单"
+          placeholder="请选择一级分类"
         >
-          <el-select v-model="menuInfo.pid" placeholder="请选择">
-            <el-option label="顶级菜单" :value="0">顶级菜单 </el-option>
+          <el-select
+            v-model="seckInfo.first_cateid"
+            placeholder="请选择"
+            @change="cateChange"
+          >
             <el-option
-              v-for="item in getStateMenuList"
+              v-for="item in cateArr"
               :key="item.id"
-              :label="item.title"
+              :label="item.catename"
               :value="item.id"
-              >{{ item.title }}</el-option
-            >
-          </el-select>
-        </el-form-item>
-        <el-form-item label="菜单类型:" :label-width="formLabelWidth">
-          <el-radio
-            :disabled="menuInfo.pid != 0"
-            v-model="menuInfo.type"
-            label="1"
-            >目录</el-radio
-          >
-          <el-radio
-            :disabled="menuInfo.pid == 0"
-            v-model="menuInfo.type"
-            label="2"
-            >菜单</el-radio
-          >
-        </el-form-item>
-        <el-form-item
-          v-if="menuInfo.type == 1"
-          label="菜单图标:"
-          :label-width="formLabelWidth"
-        >
-          <el-select
-            :disabled="menuInfo.pid != 0"
-            v-model="menuInfo.icon"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in iconList"
-              :key="item"
-              :label="item"
-              :value="item"
-              >{{ item }}</el-option
+              >{{ item.catename }}</el-option
             >
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="menuInfo.type == 2"
-          label="菜单地址:"
+          label="二级分类:"
           :label-width="formLabelWidth"
-          placeholder="请选择菜单地址"
+          placeholder="请选择二级分类"
         >
           <el-select
-            :disabled="menuInfo.pid == 0"
-            v-model="menuInfo.url"
+            v-model="seckInfo.second_cateid"
             placeholder="请选择"
+            @change="goodsInfo"
           >
             <el-option
-              v-for="item in urlList"
-              :key="item"
-              :label="item"
-              :value="item"
-              >{{ item }}</el-option
+              v-for="item in secondArr"
+              :key="item.id"
+              :label="item.catename"
+              :value="item.id"
+              >{{ item.catename }}</el-option
             >
           </el-select>
         </el-form-item>
-
+        <el-form-item label="商品:" :label-width="formLabelWidth">
+          <el-select
+            v-model="seckInfo.giidsid"
+            placeholder="请选择"
+            @change="goodsid"
+          >
+            <el-option
+              v-for="item in goodsArr"
+              :key="item.id"
+              :label="item.goodsname"
+              :value="item.id"
+              >{{ item.goodsname }}</el-option
+            >
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-radio v-model="menuInfo.status" label="1">启动</el-radio>
-          <el-radio v-model="menuInfo.status" label="2">禁用</el-radio>
+          <el-radio v-model="seckInfo.status" label="1">启动</el-radio>
+          <el-radio v-model="seckInfo.status" label="2">禁用</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,10 +93,10 @@
         <el-button
           v-if="addInfo.isAdd"
           type="primary"
-          @click="subInfo('menuInfo')"
+          @click="subInfo('seckInfo')"
           >新 增</el-button
         >
-        <el-button v-else type="primary" @click="subInfo('menuInfo')"
+        <el-button v-else type="primary" @click="subInfo('seckInfo')"
           >更 新</el-button
         >
       </div>
@@ -108,7 +106,13 @@
 
 <script>
 // 引入菜单接口
-import { getMenuAdd, getMenuInfo, getMenuEdit } from "../../util/axios";
+import {
+  getseckAdd,
+  getseckInfo,
+  getseckEdit,
+  getcateList,
+  getgoodsList
+} from "../../util/axios";
 import { mapGetters, mapActions } from "vuex";
 export default {
   props: ["addInfo"],
@@ -116,51 +120,69 @@ export default {
     return {
       editId: 0,
       formLabelWidth: "100PX", // label宽度
-      menuInfo: {
-        pid: 0, //上级分类编号
-        title: "", //菜单名称
-        icon: "", //图标
-        url: "", //菜单地址
-        type: "1", //类型1目录2菜单
-        status: "1"
+      cateArr: [], // 一级分类
+      secondArr: [], //二级分类
+      goodsArr: [], // 商品
+      seckInfo: {
+        title: "", //限时秒杀名称
+        begintime: "", //开始时间
+        endtime: "", //结束时间
+        first_cateid: "", //商品一级分类编号
+        second_cateid: "", //商品二级分类编号
+        goodsid: "", //商品编号
+        status: "1" //状态1正常2禁用
       },
+
+      value: [new Date(), new Date()],
+
       rules: {
         title: [
           { required: true, message: "请输入菜单名称", trigger: "blur" },
           { min: 2, max: 6, message: "长度在 2 到 6 个字符", trigger: "blur" }
-        ],
-        pid: [{ required: true, message: "请选择菜单", trigger: "blur" }]
-      },
-      urlList: [
-        //用于管理所有组件的路由
-        "/menu",
-        "/user",
-        "/goods",
-        "/role",
-        "/sort",
-        "/specs",
-        "/member",
-        "/banner",
-        "/seck"
-      ],
-      iconList: [
-        "el-icon-s-tools",
-        "el-icon-setting",
-        "el-icon-s-goods",
-        " el-icon-goods"
-      ]
+        ]
+      }
     };
   },
   computed: {
-    ...mapGetters(["getStateMenuList"])
+    ...mapGetters(["getStateSeckList"])
   },
   mounted() {
     // 组件一加载，就调取接口
     // 触发才调取vuex中的菜单列表
-    this.getActionMenuList();
+    this.getActionSeckList();
+    //弹框组件一加载就获取一级商品列表
+    getcateList({ pid: 0 }).then(res => {
+      if (res.data.code == 200) {
+        this.cateArr = res.data.list;
+      }
+    });
   },
   methods: {
-    ...mapActions(["getActionMenuList"]),
+    // 点击一级分类联动出现二级分类
+    cateChange(e) {
+      // e是一级分类的id 这个id对应二级分类的pid
+      getcateList({ pid: e }).then(res => {
+        if (res.data.code == 200) {
+          this.secondArr = res.data.list;
+        }
+      });
+    },
+    // 点击二级分类联动出现商品名称
+    goodsInfo(e) {
+      console.log(e);
+      // getgoodsList({ second_cateid: e }).then(res => {
+      getgoodsList().then(res => {
+        if (res.data.code == 200) {
+          console.log(res);
+          this.goodsArr = res.data.list;
+        }
+      });
+    },
+    goodsid(e) {
+      console.log(e);
+      this.seckInfo.goodsid = e;
+    },
+    ...mapActions(["getActionSeckList"]),
     // 关闭弹框事件
     cancel() {
       // 注意props属性只能用于读取，不能设置
@@ -169,25 +191,25 @@ export default {
       this.$emit("cancel", false);
     },
     reset() {
-      this.menuInfo = {
-        pid: 0,
-        title: "",
-        icon: "",
-        url: "",
-        type: "1",
-        status: "1"
+      this.seckInfo = {
+        title: "", //限时秒杀名称
+        begintime: "", //开始时间
+        endtime: "", //结束时间
+        first_cateid: "", //商品一级分类编号
+        second_cateid: "", //商品二级分类编号
+        goodsid: "", //商品编号
+        status: "1" //状态1正常2禁用
       };
     },
     update(id) {
       //点击编辑按钮出现弹框并携带数据
       this.editId = id;
       // 调取菜单查询一条数据
-      getMenuInfo({ id }).then(res => {
+      getseckInfo({ id }).then(res => {
         if (res.data.code == 200) {
           console.log(res);
-          this.menuInfo = res.data.list;
-          this.menuInfo.type = this.menuInfo.type.toString(); // 数据库里面是int类型
-          this.menuInfo.status = this.menuInfo.status.toString(); // 数据库里面是int类型
+          this.seckInfo = res.data.list;
+          this.seckInfo.status = this.seckInfo.status.toString(); // 数据库里面是int类型
         }
       });
     },
@@ -195,15 +217,22 @@ export default {
     subInfo(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          console.log(this.seckInfo, "信息");
+          let data = this.seckInfo;
+          data.begintime = this.value[0].getTime() + "";
+          data.endtime = this.value[1].getTime() + "";
+          // console.log(data.begintime);
+          // console.log(data.endtime);
           //根据isAdd状态去判断执行接口
+          console.log(data);
           if (this.addInfo.isAdd) {
             //调取添加接口
-            getMenuAdd(this.menuInfo).then(res => {
+            getseckAdd(data).then(res => {
               if (res.data.code == 200) {
                 //关闭弹框  清空输入框
                 this.cancel();
                 //添加成功重新查询列表
-                this.getActionMenuList();
+                this.getActionSeckList();
                 this.$message.success(res.data.msg);
               } else if (res.data.code == 500) {
                 this.$message.warning(res.data.msg);
@@ -213,15 +242,14 @@ export default {
             });
           } else {
             // id是必填项
-            let data = this.menuInfo; // menuInfo里面没有id属性
             data.id = this.editId;
             // 调取更新接口
-            getMenuEdit(data).then(res => {
+            getseckEdit(data).then(res => {
               if (res.data.code == 200) {
                 //关闭弹框  清空输入框
                 this.cancel();
                 //添加成功重新查询列表
-                this.getActionMenuList();
+                this.getActionSeckList();
                 this.$message.success(res.data.msg);
               } else if (res.data.code == 500) {
                 this.$message.warning(res.data.msg);
@@ -240,4 +268,8 @@ export default {
 };
 </script>
 
-<style lang="" scoped></style>
+<style lang="stylus" scoped>
+.line {
+text-align: center
+}
+</style>

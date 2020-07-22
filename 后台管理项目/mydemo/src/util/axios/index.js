@@ -177,9 +177,9 @@ export function getgoodsDelete(data) {
 
 /* ============会员管理=============== */
 // 封装获取会员总数的接口
-export function getmemberCount() {
-    return http.get('/api/membercount')
-}
+// export function getmemberCount() {
+//     return http.get('/api/membercount')
+// }
 // 封装一个会员列表获取接口
 export function getmemberList() {
     return http.get('/api/memberlist')

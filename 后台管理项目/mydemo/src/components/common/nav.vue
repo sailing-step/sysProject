@@ -15,7 +15,11 @@
             <i class="el-icon-menu"></i>
             <span slot="title">首页</span>
           </el-menu-item>
-          <el-submenu :index="item.id.toString()" v-for="item in getStateMenuList" :key="item.id">
+          <el-submenu
+            :index="item.id.toString()"
+            v-for="item in navMenu"
+            :key="item.id"
+          >
             <template slot="title">
               <i :class="item.icon"></i>
               <span>{{ item.title }}</span>
@@ -24,7 +28,8 @@
               :index="menu.url"
               v-for="menu in item.children"
               :key="menu.id"
-            >{{ menu.title }}</el-menu-item>
+              >{{ menu.title }}</el-menu-item
+            >
           </el-submenu>
         </el-menu>
       </el-col>
@@ -42,7 +47,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getStateMenuList"])
+    // ...mapGetters(["getStateMenuList"]),
+    navMenu() {
+      let data = {};
+      data = sessionStorage.getItem("userInfo")
+        ? JSON.parse(sessionStorage.getItem("userInfo")).menus
+        : {};
+      return data;
+    }
   },
   mounted() {
     //   组件挂载

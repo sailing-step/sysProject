@@ -18,7 +18,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="item">
-          <el-button type="primary" size="small" @click="update(item.row.uid)">编辑</el-button>
+          <el-button type="primary" size="small" @click="update(item.row.uid)"
+            >编辑</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -27,11 +29,13 @@
 
 <script>
 // 引入菜单接口
-import {} from "../../util/axios";
+// import { getmemberCount } from "../../util/axios";
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    count: 0;
+    return {
+      count: 0
+    };
   },
   computed: {
     ...mapGetters(["getStateMemberList"])
@@ -47,37 +51,7 @@ export default {
         dialogIsShow: true,
         uid
       });
-    },
-    //封装获取总条目接口
-    getCount() {
-      //调取总条数接口
-      getgoodsCount().then(res => {
-        if (res.data.code == 200) {
-          this.count = res.data.list[0].total;
-          //如果当前不是第一页并且只有一条数据，我就让页面数量--
-          // if (this.pageInfo.page != 1 && this.getStateGoodsList.length == 1) {
-          //   this.pageInfo.page--;
-          // }
-          //调取获取商品规格接口列表的行动
-          this.$store.dispatch("getActionMemberList");
-        }
-      });
     }
-    //  //封装获取总条目接口
-    //   getCount() {
-    //     //调取总条数接口
-    //     getgoodsCount().then(res => {
-    //       if (res.data.code == 200) {
-    //         this.count = res.data.list[0].total;
-    //         //如果当前不是第一页并且只有一条数据，我就让页面数量--
-    //         if (this.pageInfo.page != 1 && this.getStateGoodsList.length == 1) {
-    //           this.pageInfo.page--;
-    //         }
-    //         //调取获取商品规格接口列表的行动
-    //         this.$store.dispatch("getActionGoodsList", this.pageInfo);
-    //       }
-    //     });
-    //   },
   }
 };
 </script>
