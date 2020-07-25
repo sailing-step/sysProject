@@ -19,11 +19,7 @@
       <el-table-column prop="img" label="图片">
         <!-- 需要获取当前单元格 item.row.img  需要外层加template -->
         <template slot-scope="item">
-          <img
-            class="imgInfo"
-            :src="'http://localhost:3000' + item.row.img"
-            alt
-          />
+          <img class="imgInfo" :src="'http://localhost:3000' + item.row.img" alt />
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -34,12 +30,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="item">
-          <el-button type="primary" size="small" @click="update(item.row.id)"
-            >编辑</el-button
-          >
-          <el-button type="danger" size="small" @click="del(item.row.id)"
-            >删除</el-button
-          >
+          <el-button type="primary" size="small" @click="update(item.row.id)">编辑</el-button>
+          <el-button type="danger" size="small" @click="del(item.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -51,12 +43,7 @@
       :before-close="cancel"
     >
       <el-form :model="cateInfo" :rules="rules" ref="cateInfo">
-        <el-form-item
-          label="上级分类"
-          :label-width="formLabelWidth"
-          prop="pid"
-          placeholder="请选择分类"
-        >
+        <el-form-item label="上级分类" :label-width="formLabelWidth" prop="pid" placeholder="请选择分类">
           <el-select v-model="cateInfo.pid" placeholder="请选择">
             <el-option label="顶级分类" :value="0">顶级分类</el-option>
             <el-option
@@ -64,21 +51,15 @@
               :key="item.id"
               :label="item.catename"
               :value="item.id"
-              >{{ item.catename }}</el-option
-            >
+            >{{ item.catename }}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="分类名称"
-          :label-width="formLabelWidth"
-          prop="catename"
-        >
+        <el-form-item label="分类名称" :label-width="formLabelWidth" prop="catename">
           <el-input v-model="cateInfo.catename"></el-input>
         </el-form-item>
         <el-form-item label="图片" :label-width="formLabelWidth">
           <!-- :auto-upload="false" 防止自动上传 -->
           <el-upload
-            ref="upload"
             action="#"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
@@ -102,12 +83,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button v-if="isAdd" type="primary" @click="subInfo('cateInfo')"
-          >新 增</el-button
-        >
-        <el-button v-else type="primary" @click="subInfo('cateInfo')"
-          >更 新</el-button
-        >
+        <el-button v-if="isAdd" type="primary" @click="subInfo('cateInfo')">新 增</el-button>
+        <el-button v-else type="primary" @click="subInfo('cateInfo')">更 新</el-button>
       </div>
     </el-dialog>
   </div>
@@ -119,7 +96,7 @@ import {
   getcateAdd,
   getcateInfo,
   getcateEdit,
-  getcateDelete
+  getcateDelete,
 } from "../../util/axios";
 //调取辅助性函数
 import { mapActions, mapGetters } from "vuex";
@@ -138,19 +115,19 @@ export default {
         pid: 0, // 上级分类编号
         catename: "",
         img: "",
-        status: "1"
+        status: "1",
       },
       dialogIsShow: false,
       rules: {
         catename: [
-          { required: true, message: "请输入分类名称", trigger: "blur" }
+          { required: true, message: "请输入分类名称", trigger: "blur" },
         ],
-        pid: [{ required: true, message: "请选择菜单", trigger: "blur" }]
-      }
+        pid: [{ required: true, message: "请选择菜单", trigger: "blur" }],
+      },
     };
   },
   computed: {
-    ...mapGetters(["getStateCateList"])
+    ...mapGetters(["getStateCateList"]),
   },
   mounted() {
     // 组件一加载，就调取接口
@@ -160,9 +137,9 @@ export default {
   methods: {
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
       );
     },
     // 图片移除
@@ -189,14 +166,15 @@ export default {
     },
     //重置输入内容
     reset() {
-      (this.imgUrl = ""), (this.fileList = []); // 清空文件列表
-      this.$refs.upload.clearFiles();
+      this.imgUrl = "";
+      this.fileList = []; // 清空文件列表
+      // this.$refs.upload.clearFiles();
       this.dialogImageUrl = "";
       this.cateInfo = {
         pid: 0,
         catename: "",
         img: "",
-        status: "1"
+        status: "1",
       };
     },
     //封装一个获取分类列表事件
@@ -213,7 +191,7 @@ export default {
       this.isAdd = false;
       // 编辑给editId赋值
       this.editId = id;
-      getcateInfo({ id }).then(res => {
+      getcateInfo({ id }).then((res) => {
         if (res.data.code == 200) {
           console.log(res);
           this.cateInfo = res.data.list;
@@ -230,10 +208,10 @@ export default {
       this.$confirm("你确定删除这条数据吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
-          getcateDelete({ id }).then(res => {
+          getcateDelete({ id }).then((res) => {
             if (res.data.code == 200) {
               this.getActionCateList(); // 删除成功重新获取数据渲染
               this.$message.success(res.data.msg);
@@ -245,13 +223,13 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     // 确定添加或者更新事件
     subInfo(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           // console.log(this.cateInfo, "信息");
           let data = this.cateInfo;
@@ -266,7 +244,7 @@ export default {
             // 单独对图片地址进行操作
             file.append("img", this.imgUrl);
             //调取添加接口
-            getcateAdd(file).then(res => {
+            getcateAdd(file).then((res) => {
               if (res.data.code == 200) {
                 //关闭弹框
                 this.dialogIsShow = false;
@@ -288,12 +266,12 @@ export default {
               this.imgUrl = "";
             } else {
               // 如果图片未修改 沿用上次图片的地址那么on-change不会触发，那么图片就为空 如果图片被修改使用新图片地址
-              this.imgUrl = this.imgUrl ? this.imgUrl : this.goodsInfo.img;
+              this.imgUrl = this.imgUrl ? this.imgUrl : this.cateInfo.img;
             }
 
             file.append("img", this.imgUrl);
             // 调取更新接口
-            getcateEdit(file).then(res => {
+            getcateEdit(file).then((res) => {
               if (res.data.code == 200) {
                 //关闭弹框
                 this.dialogIsShow = false;
@@ -314,11 +292,11 @@ export default {
           return false;
         }
       });
-    }
+    },
   },
   components: {
-    breadCrumb
-  }
+    breadCrumb,
+  },
 };
 </script>
 
