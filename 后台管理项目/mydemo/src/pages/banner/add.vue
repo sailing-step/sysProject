@@ -96,6 +96,7 @@ export default {
     //移除图片
     handleRemove(file, fileList) {
       console.log(file, fileList);
+      this.fileList = fileList;
     },
     //放大图片
     handlePreview(file) {
@@ -117,6 +118,7 @@ export default {
       this.$emit("cancel", false);
     },
     reset() {
+      this.imgUrl = "";
       this.fileList = [];
       this.bannerInfo = {
         title: "", //轮播图标题
@@ -169,7 +171,14 @@ export default {
           } else {
             // id是必填项
             file.append("id", this.editId);
-            this.imgUrl = this.imgUrl ? this.imgUrl : this.bannerInfo.img;
+            // 如果删除图片，进行判断
+            if (this.imgUrl == "" && this.fileList.length == 0) {
+              this.imgUrl = "";
+            } else {
+              // 如果图片未修改 沿用上次图片的地址那么on-change不会触发，那么图片就为空 如果图片被修改使用新图片地址
+              this.imgUrl = this.imgUrl ? this.imgUrl : this.goodsInfo.img;
+            }
+
             file.append("img", this.imgUrl);
             // 调取更新接口
             getbannerEdit(file).then(res => {

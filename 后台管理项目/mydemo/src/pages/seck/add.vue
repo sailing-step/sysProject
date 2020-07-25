@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      :title="addInfo.isAdd ? '添加秒杀' : '编辑秒杀'"
+      :title="addInfo.isAdd ? '添加秒杀活动' : '秒杀活动编辑'"
       :visible.sync="addInfo.dialogIsShow"
       center
       :before-close="cancel"
@@ -20,15 +20,18 @@
           <el-input v-model="seckInfo.title"></el-input>
         </el-form-item>
         <el-form-item label="活动时间:" :label-width="formLabelWidth">
-          <el-time-picker
-            is-range
-            v-model="value"
+          <el-date-picker
+            v-model="dateValue"
+            type="datetimerange"
+            align="right"
+            unlink-panels
             range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            placeholder="选择时间范围"
-          >
-          </el-time-picker>
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions"
+            value-format="timestamp"
+            @change="getTime"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item
           label="一级分类:"
@@ -57,7 +60,7 @@
           <el-select
             v-model="seckInfo.second_cateid"
             placeholder="请选择"
-            @change="goodsInfo"
+            @change="getGoods"
           >
             <el-option
               v-for="item in secondArr"
@@ -69,11 +72,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="商品:" :label-width="formLabelWidth">
-          <el-select
-            v-model="seckInfo.giidsid"
-            placeholder="请选择"
-            @change="goodsid"
-          >
+          <el-select v-model="seckInfo.goodsid" placeholder="请选择商品">
             <el-option
               v-for="item in goodsArr"
               :key="item.id"
@@ -111,9 +110,11 @@ import {
   getseckInfo,
   getseckEdit,
   getcateList,
-  getgoodsList
+  getgoodsList,
+  getgoodsInfo
 } from "../../util/axios";
 import { mapGetters, mapActions } from "vuex";
+// import { toTime } from "../../filter/toTime";
 export default {
   props: ["addInfo"],
   data() {
@@ -132,13 +133,47 @@ export default {
         goodsid: "", //商品编号
         status: "1" //状态1正常2禁用
       },
-
-      value: [new Date(), new Date()],
-
+      dateValue: [],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      },
       rules: {
         title: [
           { required: true, message: "请输入菜单名称", trigger: "blur" },
-          { min: 2, max: 6, message: "长度在 2 到 6 个字符", trigger: "blur" }
+          {
+            min: 2,
+            max: 16,
+            message: "长度在 2 到 16 个字符",
+            trigger: "blur"
+          }
         ]
       }
     };
@@ -150,37 +185,47 @@ export default {
     // 组件一加载，就调取接口
     // 触发才调取vuex中的菜单列表
     this.getActionSeckList();
-    //弹框组件一加载就获取一级商品列表
-    getcateList({ pid: 0 }).then(res => {
-      if (res.data.code == 200) {
-        this.cateArr = res.data.list;
-      }
-    });
+    //组件一加载获取一级
+    this.getCatesList();
   },
   methods: {
-    // 点击一级分类联动出现二级分类
-    cateChange(e) {
-      // e是一级分类的id 这个id对应二级分类的pid
-      getcateList({ pid: e }).then(res => {
+    // 获取时间
+    getTime(e) {
+      this.seckInfo.begintime = e[0];
+      this.seckInfo.endtime = e[1];
+    },
+    // 优化
+    // 获取分类列表
+    getCatesList(pid = 0) {
+      getcateList({ pid }).then(res => {
         if (res.data.code == 200) {
-          this.secondArr = res.data.list;
+          if (pid == 0) {
+            this.cateArr = res.data.list;
+          } else {
+            this.secondArr = res.data.list;
+          }
         }
       });
     },
-    // 点击二级分类联动出现商品名称
-    goodsInfo(e) {
-      console.log(e);
-      // getgoodsList({ second_cateid: e }).then(res => {
-      getgoodsList().then(res => {
+    // 点击一级分类联动出现二级分类
+    cateChange(e) {
+      console.log(e, "点击一级分类");
+      // e是一级分类的id 这个id对应二级分类的pid
+      this.secondArr = [];
+      this.getCatesList(e);
+    },
+    // 获取商品
+    getGoods() {
+      console.log(this.seckInfo.first_cateid, this.seckInfo.second_cateid);
+      //调取接口列表数据 根据后台代码，传相应参数
+      getgoodsList({
+        fid: this.seckInfo.first_cateid,
+        sid: this.seckInfo.second_cateid
+      }).then(res => {
         if (res.data.code == 200) {
-          console.log(res);
           this.goodsArr = res.data.list;
         }
       });
-    },
-    goodsid(e) {
-      console.log(e);
-      this.seckInfo.goodsid = e;
     },
     ...mapActions(["getActionSeckList"]),
     // 关闭弹框事件
@@ -209,6 +254,10 @@ export default {
         if (res.data.code == 200) {
           console.log(res);
           this.seckInfo = res.data.list;
+          this.getCatesList(this.seckInfo.first_cateid);
+          this.getGoods();
+          this.dateValue = [this.seckInfo.begintime, this.seckInfo.endtime];
+          console.log(this.dateValue);
           this.seckInfo.status = this.seckInfo.status.toString(); // 数据库里面是int类型
         }
       });
@@ -219,12 +268,8 @@ export default {
         if (valid) {
           console.log(this.seckInfo, "信息");
           let data = this.seckInfo;
-          data.begintime = this.value[0].getTime() + "";
-          data.endtime = this.value[1].getTime() + "";
-          // console.log(data.begintime);
-          // console.log(data.endtime);
           //根据isAdd状态去判断执行接口
-          console.log(data);
+          // console.log(data);
           if (this.addInfo.isAdd) {
             //调取添加接口
             getseckAdd(data).then(res => {
@@ -270,6 +315,6 @@ export default {
 
 <style lang="stylus" scoped>
 .line {
-text-align: center
+  text-align: center;
 }
 </style>

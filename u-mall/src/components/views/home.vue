@@ -29,14 +29,14 @@
             </li>
           </ul>
           <span class="arrow">
-            <img :src="img2" alt />
+            <img :src="img2" @click="show" ref="show" alt />
           </span>
         </div>
       </nav>
       <mt-swipe :auto="4000">
         <mt-swipe-item v-for="item in bannerList" :key="item.id">
           <a href="javascript:;">
-            <img :src="item.img" alt />
+            <img :src="$imgUrl + item.img" alt />
           </a>
         </mt-swipe-item>
       </mt-swipe>
@@ -51,13 +51,10 @@
       <div class="sale">
         <div class="left">
           <a href="#">
-            <h3>
-              <img :src="sale[0].img1" alt />限时秒杀
-            </h3>
+            <h3><img :src="sale[0].img1" alt />限时秒杀</h3>
             <p class="des">每天零点场 好货秒不停</p>
             <p class="time">
-              <span>19</span>：
-              <span>30</span>：
+              <span>19</span>： <span>30</span>：
               <span>29</span>
               <i>秒杀</i>
             </p>
@@ -126,7 +123,11 @@
             </ul>
           </div>
 
-          <div class="pro-info" v-for="list in topList[num].goodsList" :key="list.id">
+          <div
+            class="pro-info"
+            v-for="list in topList[num].goodsList"
+            :key="list.id"
+          >
             <div class="item">
               <div class="pic">
                 <a href="javascript:;">
@@ -149,6 +150,7 @@
   </div>
 </template>
 <script>
+import { getbanner } from "../../util/axios";
 export default {
   data() {
     return {
@@ -184,22 +186,21 @@ export default {
         {
           id: 7,
           name: "果蔬"
-        }
-      ],
-      bannerList: [
-        {
-          id: 1,
-          img: require("../../assets/images/index_images/banner.jpg")
         },
         {
-          id: 2,
-          img: require("../../assets/images/index_images/banner2.jpg")
+          id: 8,
+          name: "果蔬"
         },
         {
-          id: 3,
-          img: require("../../assets/images/index_images/banner3.jpg")
+          id: 9,
+          name: "果蔬"
+        },
+        {
+          id: 10,
+          name: "果蔬"
         }
       ],
+      bannerList: [],
       iconList: [
         {
           id: 1,
@@ -345,6 +346,9 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.getBanner();
+  },
   methods: {
     sel(i) {
       this.$router.push("/proList");
@@ -352,6 +356,23 @@ export default {
     },
     select(i) {
       this.num = i;
+    },
+    // 点击三角，内容呈现，再点击，内容缩回
+    show() {
+      // this.$refs.show.parentNode.parentNode.style.height = 1.6 + "rem";
+      this.$refs.show.parentNode.previousElementSibling.style.height =
+        1.6 + "rem";
+      this.$refs.show.parentNode.style.display = "none";
+      console.log(this.$refs.show.parentNode.previousElementSibling);
+    },
+    // 获取轮播图列表
+    getBanner() {
+      getbanner().then(res => {
+        if (res.data.code == 200) {
+          console.log(res.data.list);
+          this.bannerList = res.data.list;
+        }
+      });
     }
   }
 };

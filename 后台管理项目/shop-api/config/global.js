@@ -5,7 +5,7 @@ exports.dbConfig = {
     user: 'root',
     password: '716520',
     port: 3306,
-    database: 'umallshop' // 数据库名字
+    database: 'uMallShop' // 数据库名字
 }
 
 // token过期时间 (分钟单位)

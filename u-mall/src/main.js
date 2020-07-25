@@ -10,6 +10,12 @@ Vue.use(Mint);
 // 导入mint-ui的样式
 import 'mint-ui/lib/style.css'
 
+// 全局安装 Vant
+import Vant from 'vant'
+Vue.use(Vant)
+// 导入Vant的样式
+import 'vant/lib/index.css'
+
 // 引入清除默认样式文件
 import './assets/css/reset.css'
 
@@ -27,7 +33,8 @@ import gCom from './common' // /index 可以不写，webpack会自动找到并�
 for (let i in gCom) {
   Vue.component(i, gCom[i])
 }
-
+// 设定一个服务器地址，用于文件上传
+Vue.prototype.$imgUrl = 'http://localhost:3000'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

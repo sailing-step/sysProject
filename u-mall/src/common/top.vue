@@ -47,6 +47,7 @@ export default {
   width: 7.5rem;
   background-color: #f26b11;
   z-index: 999;
+  /* overflow: hidden; */
 }
 .header .wrap {
   display: flex;

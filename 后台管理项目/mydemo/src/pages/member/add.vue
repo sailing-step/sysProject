@@ -1,11 +1,24 @@
 <template>
   <div>
-    <el-dialog title="会员编辑" :visible.sync="dialogIsShow" center :before-close="cancel">
+    <el-dialog
+      title="会员编辑"
+      :visible.sync="dialogIsShow"
+      center
+      :before-close="cancel"
+    >
       <el-form :model="memberInfo" :rules="rules" ref="memberInfo">
-        <el-form-item label="手机号:" :label-width="formLabelWidth" prop="phone">
+        <el-form-item
+          label="手机号:"
+          :label-width="formLabelWidth"
+          prop="phone"
+        >
           <el-input v-model="memberInfo.phone"></el-input>
         </el-form-item>
-        <el-form-item label="昵称:" :label-width="formLabelWidth" prop="nickname">
+        <el-form-item
+          label="昵称:"
+          :label-width="formLabelWidth"
+          prop="nickname"
+        >
           <el-input v-model="memberInfo.nickname"></el-input>
         </el-form-item>
         <el-form-item label="密码:" :label-width="formLabelWidth">
@@ -18,7 +31,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="subInfo('memberInfo')">修改</el-button>
+        <el-button type="primary" @click="subInfo('memberInfo')"
+          >修改</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -92,8 +107,9 @@ export default {
           // id是必填项
           let data = this.memberInfo; // memberInfo里面没有id属性
           data.uid = this.editId;
+          console.log(data);
           // 调取更新接口
-          getMemberEdit(data).then(res => {
+          getmemberEdit(data).then(res => {
             if (res.data.code == 200) {
               //关闭弹框  清空输入框
               this.cancel();

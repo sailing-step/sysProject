@@ -26,10 +26,12 @@ export default {
     // 关闭弹框事件
     // add 子传父，修改父级数据
     cancel(e) {
+      console.log(e);
       this.dialogIsShow = e;
     },
     //list组件传值并修改数据
     edit(e) {
+      console.log(e);
       this.dialogIsShow = e.dialogIsShow;
       this.$refs.vAdd.update(e.uid);
     }

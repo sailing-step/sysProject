@@ -13,8 +13,12 @@ router.get("/membercount",async(req,res)=>{
 //会员列表
 router.get("/memberlist", async (req, res) => {
     const { size,page } = req['query'];
-    let data = await Db.select(req, `SELECT * FROM ${tableName} 
-        LIMIT ${(page-1)*size},${size}`);
+    let data = [];
+    if(size && page){
+        data = await Db.select(req, `SELECT * FROM ${tableName} LIMIT ${(page-1)*size},${size}`);
+    }else{
+        data = await Db.select(req, `SELECT * FROM ${tableName}`);
+    }
     res.send(Success(data));
 });
 //获取一条

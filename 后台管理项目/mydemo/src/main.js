@@ -10,7 +10,12 @@ import ElementUI from 'element-ui'
 // 引入样式
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
-
+// 引入全局过滤器
+import gFilter from './filter'
+console.log(gFilter)
+for (let i in gFilter) {
+  Vue.filter(i, gFilter[i])
+}
 import './assets/css/reset.css'
 // 引入全局axios
 // import axios from 'axios'

@@ -19,7 +19,11 @@
       <el-table-column prop="img" label="图片">
         <!-- 需要获取当前单元格 item.row.img  需要外层加template -->
         <template slot-scope="item">
-          <img class="imgInfo" :src="'http://localhost:3000' + item.row.img" alt />
+          <img
+            class="imgInfo"
+            :src="'http://localhost:3000' + item.row.img"
+            alt
+          />
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -30,8 +34,12 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="item">
-          <el-button type="primary" size="small" @click="update(item.row.id)">编辑</el-button>
-          <el-button type="danger" size="small" @click="del(item.row.id)">删除</el-button>
+          <el-button type="primary" size="small" @click="update(item.row.id)"
+            >编辑</el-button
+          >
+          <el-button type="danger" size="small" @click="del(item.row.id)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -43,7 +51,12 @@
       :before-close="cancel"
     >
       <el-form :model="cateInfo" :rules="rules" ref="cateInfo">
-        <el-form-item label="上级分类" :label-width="formLabelWidth" prop="pid" placeholder="请选择分类">
+        <el-form-item
+          label="上级分类"
+          :label-width="formLabelWidth"
+          prop="pid"
+          placeholder="请选择分类"
+        >
           <el-select v-model="cateInfo.pid" placeholder="请选择">
             <el-option label="顶级分类" :value="0">顶级分类</el-option>
             <el-option
@@ -51,10 +64,15 @@
               :key="item.id"
               :label="item.catename"
               :value="item.id"
-            >{{ item.catename }}</el-option>
+              >{{ item.catename }}</el-option
+            >
           </el-select>
         </el-form-item>
-        <el-form-item label="分类名称" :label-width="formLabelWidth" prop="catename">
+        <el-form-item
+          label="分类名称"
+          :label-width="formLabelWidth"
+          prop="catename"
+        >
           <el-input v-model="cateInfo.catename"></el-input>
         </el-form-item>
         <el-form-item label="图片" :label-width="formLabelWidth">
@@ -84,8 +102,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button v-if="isAdd" type="primary" @click="subInfo('cateInfo')">新 增</el-button>
-        <el-button v-else type="primary" @click="subInfo('cateInfo')">更 新</el-button>
+        <el-button v-if="isAdd" type="primary" @click="subInfo('cateInfo')"
+          >新 增</el-button
+        >
+        <el-button v-else type="primary" @click="subInfo('cateInfo')"
+          >更 新</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -146,6 +168,7 @@ export default {
     // 图片移除
     handleRemove(file, fileList) {
       console.log(file, fileList);
+      this.fileList = fileList;
     },
     // 图片放大
     handlePictureCardPreview(file) {
@@ -166,7 +189,7 @@ export default {
     },
     //重置输入内容
     reset() {
-      this.fileList = []; // 清空文件列表
+      (this.imgUrl = ""), (this.fileList = []); // 清空文件列表
       this.$refs.upload.clearFiles();
       this.dialogImageUrl = "";
       this.cateInfo = {
@@ -237,10 +260,11 @@ export default {
           for (let i in data) {
             file.append(i, data[i]);
           }
-          // 单独对图片地址进行操作
-          file.append("img", this.imgUrl);
+
           // 根据isAdd状态去判断执行接口;
           if (this.isAdd) {
+            // 单独对图片地址进行操作
+            file.append("img", this.imgUrl);
             //调取添加接口
             getcateAdd(file).then(res => {
               if (res.data.code == 200) {
@@ -259,6 +283,15 @@ export default {
             });
           } else {
             file.append("id", this.editId);
+            // 如果删除图片，进行判断
+            if (this.imgUrl == "" && this.fileList.length == 0) {
+              this.imgUrl = "";
+            } else {
+              // 如果图片未修改 沿用上次图片的地址那么on-change不会触发，那么图片就为空 如果图片被修改使用新图片地址
+              this.imgUrl = this.imgUrl ? this.imgUrl : this.goodsInfo.img;
+            }
+
+            file.append("img", this.imgUrl);
             // 调取更新接口
             getcateEdit(file).then(res => {
               if (res.data.code == 200) {

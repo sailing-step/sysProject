@@ -62,9 +62,14 @@ export default new Router({
       name: '确认订单'
     },
     {
-      path: '/demo',
-      component: () => import('@/components/demo'),
-      name: 'demo'
+      path: '/login',
+      component: () => import('@/components/pages/login'),
+      name: '登录'
+    },
+    {
+      path: '/register',
+      component: () => import('@/components/pages/register'),
+      name: '注册'
     },
     {
       path: '*',

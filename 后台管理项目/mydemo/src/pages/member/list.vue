@@ -28,14 +28,10 @@
 </template>
 
 <script>
-// 引入菜单接口
-// import { getmemberCount } from "../../util/axios";
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {
-      count: 0
-    };
+    return {};
   },
   computed: {
     ...mapGetters(["getStateMemberList"])
@@ -47,6 +43,7 @@ export default {
     ...mapActions(["getActionMemberList"]),
     //点击添加按钮修改父组件数据
     update(uid) {
+      console.log(uid);
       this.$emit("edit", {
         dialogIsShow: true,
         uid

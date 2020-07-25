@@ -5,7 +5,6 @@ const { Success, MError } = require("../utils/Result");
 const Db = require("../utils/Db");
 //秒杀活动列表
 router.get("/secklist", async (req, res) => {
-    const { pid } = req['query'];
     let data = await Db.select(req, `SELECT * FROM ${tableName}`);
     res.send(Success(data));
 });

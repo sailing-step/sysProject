@@ -72,6 +72,8 @@ body {
 
 .nav ul {
   width: 20rem;
+  display: flex;
+  overflow: hidden;
 }
 
 .nav ul li {

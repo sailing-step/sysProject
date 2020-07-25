@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const random = require('string-random');
 const { Success, MError } = require("../utils/Result");
 const Db = require("../utils/Db");
-const { getUUID,getToken } = require("../utils");
+const { getUUID,getToken,getTree } = require("../utils");
 var router = express.Router();
 const tableNameCate = 'category';//商品分类
 const tableNameBanner = 'banner';//轮播图
@@ -46,14 +46,22 @@ router.get("/getindexgoods",async(req,res)=>{
 	data.push({content:data3});
 	res.send(Success(data));
 });
-//获取分类商品
-router.get("/getcategoods",async(req,res)=>{
-    const {fid} = req['query'];
-    if(!fid){
-        res.send(MError("缺少必要条件"));
-        return;
+//获取分类信息
+router.get("/getcatetree", async (req, res) => {
+    let data = await Db.select(req, `SELECT * FROM ${tableNameCate}`);
+    res.send(Success(getTree(data)));
+});
+//获取商品
+router.get("/getgoods",async(req,res)=>{
+    const {fid,keyword} = req['query'];
+    let condition = 'status = 1'
+    if(fid){
+        condition += ` AND (first_cateid = ${fid} OR second_cateid = ${fid})`;
     }
-    let data = await Db.select(req, `SELECT id,goodsname,price,market_price,img FROM ${tableNameGoods} WHERE status = 1 AND first_cateid = ${fid}`);
+    if(keyword){
+        condition += ` AND goodsname LIKE '%${keyword}%'`
+    }
+    let data = await Db.select(req, `SELECT id,goodsname,price,market_price,img FROM ${tableNameGoods} WHERE ${condition} `);
     res.send(Success(data));
 });
 //获取一条商品信息
