@@ -3,8 +3,17 @@
     <div class="container">
       <top></top>
       <ul class="pro-list">
-        <li v-for="(item, i) in goodsList" :key="item.id" :class="[item.checked ? 'active' : '']">
-          <input type="checkbox" class="checkOne" v-model="item.checked" :value="item.checked" />
+        <li
+          v-for="(item, i) in goodsList"
+          :key="item.id"
+          :class="[item.checked ? 'active' : '']"
+        >
+          <input
+            type="checkbox"
+            class="checkOne"
+            v-model="item.checked"
+            :value="item.checked"
+          />
           <img :src="item.img" alt />
           <p>
             <span class="pro-name">{{ item.goodsName }}</span>

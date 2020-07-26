@@ -25,7 +25,7 @@
           class="proInfo"
           v-for="item in goodsList"
           :key="item.id"
-          @click="goDetail()"
+          @click="goDetail(item.id)"
         >
           <div class="pic">
             <a href="#">
@@ -87,8 +87,13 @@ export default {
         }
       });
     },
-    goDetail() {
-      this.$router.push("/proDetail");
+    goDetail(id) {
+      this.$router.push({
+        path: "/proDetail",
+        query: {
+          id
+        }
+      });
     }
   }
 };

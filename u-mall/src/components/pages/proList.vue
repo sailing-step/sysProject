@@ -118,6 +118,7 @@ export default {
           console.log(res.data.list);
           this.navList = res.data.list;
           this.goodsList = res.data.list[i].children;
+          console.log(this.goodsList);
           this.title = res.data.list[i].catename;
           this.fid = res.data.list[i].id;
           console.log(this.fid);
@@ -133,6 +134,14 @@ export default {
         }
       });
     },
+    // goDetail(id) {
+    //   this.$router.push({
+    //     path: "/proDetail",
+    //     query: {
+    //       id
+    //     }
+    //   });
+    // },
     // 获取树形结构分类信息
     getcateTree(i) {
       getcatetree().then(res => {

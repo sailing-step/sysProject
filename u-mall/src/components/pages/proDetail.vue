@@ -4,11 +4,10 @@
       <top></top>
       <div class="content">
         <div class="proinfo">
-          <img :src="proInfo.img" alt />
-          <h3>{{ proInfo.name }}</h3>
+          <img :src="$imgUrl + goodsDetail.img" alt />
+          <h3>{{ goodsDetail.goodsname }}</h3>
           <p>
-            <span>¥{{ proInfo.price.toFixed(2) }}</span
-            >(此价格不与套装优惠同时享受)
+            <span>¥{{ goodsDetail.price }}.00</span>(此价格不与套装优惠同时享受)
           </p>
         </div>
         <div class="choose">
@@ -40,9 +39,15 @@
                 <img :src="choose.img" alt />
               </div>
               <div class="size">
-                <span>规格</span>
-                <p class="prev">30g</p>
-                <p class="next">5g</p>
+                <span>{{ goodsDetail.specsname }}</span>
+                <p
+                  v-for="(item, i) in goodsDetail.specsattr"
+                  :key="item.id"
+                  @click="color(i)"
+                  :class="[idx == i ? 'prev' : '']"
+                >
+                  {{ item }}
+                </p>
               </div>
             </div>
           </div>
@@ -51,15 +56,11 @@
           <div class="head">
             <p>商品详情</p>
           </div>
-          <div class="picInfo">
-            <img
-              :src="item.img"
-              alt
-              class="one"
-              v-for="item in proDetail"
-              :key="item.id"
-            />
-          </div>
+          <div
+            class="picInfo"
+            ref="desc"
+            v-html="goodsDetail.description"
+          ></div>
         </div>
         <div class="comment">
           <div class="wrap">
@@ -86,7 +87,7 @@
         </div>
         <div class="fixed-footer">
           <a href="#">
-            <div class="car">
+            <div class="car" @click="goCar">
               <img :src="footer.img" alt />
               <p>购物车</p>
               <div class="count">
@@ -94,7 +95,7 @@
               </div>
             </div>
           </a>
-          <a href="#" class="prev">加入购物车</a>
+          <a href="#" class="prev" @click="addToCar">加入购物车</a>
           <a href="#" class="next">立即购买</a>
         </div>
       </div>
@@ -102,16 +103,16 @@
   </div>
 </template>
 <script>
+import { getgoodsinfo } from "../../util/axios";
+
 export default {
   data() {
     return {
+      idx: 0,
+      goodsDetail: {},
+      id: 0,
       head: {
         img: require("../../assets/images/public/arrow.jpg")
-      },
-      proInfo: {
-        img: require("../../assets/images/detail_images/pic01.jpg"),
-        name: " 娅芝贵妇素颜霜 贵妇膏神仙膏补水保湿懒人霜遮瑕珍珠膏",
-        price: 123
       },
       choose: {
         img: require("../../assets/images/detail_images/arrow.jpg"),
@@ -166,7 +167,18 @@ export default {
       }
     };
   },
+  mounted() {
+    console.log(this.$route.query.id);
+    this.id = this.$route.query.id;
+    this.getgoodsInfo(this.id);
+  },
   methods: {
+    goCar() {
+      this.$router.push("/car");
+    },
+    color(i) {
+      this.idx = i;
+    },
     sub() {
       if (this.choose.num == 1) {
         this.choose.num = 1;
@@ -176,7 +188,19 @@ export default {
     },
     add() {
       this.choose.num++;
-    }
+    },
+    getgoodsInfo(id) {
+      getgoodsinfo({ id }).then(res => {
+        if (res.data.code == 200) {
+          console.log(res.data.list);
+          this.goodsDetail = res.data.list[0];
+          this.goodsDetail.specsattr = this.goodsDetail.specsattr.split(",");
+          // this.$refs.desc.html(this.goodsDetail.description);
+        }
+      });
+    },
+    // 添加到购物车
+    addToCar() {}
   }
 };
 </script>
