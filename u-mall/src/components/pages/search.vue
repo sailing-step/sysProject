@@ -29,13 +29,13 @@
         >
           <div class="pic">
             <a href="#">
-              <img :src="item.img" alt="" />
+              <img :src="$imgUrl + item.img" alt="" />
             </a>
           </div>
           <div class="txt">
-            <h3>{{ item.goodsName }}</h3>
-            <p class="first"><span>¥</span>{{ item.goodsPrice.toFixed(2) }}</p>
-            <p class="second">{{ item.comment }}条评论</p>
+            <h3>{{ item.goodsname }}</h3>
+            <p class="first"><span>¥</span>{{ item.price.toFixed(2) }}</p>
+            <!-- <p class="second">{{ item.comment }}条评论</p> -->
           </div>
         </div>
       </div>
@@ -58,9 +58,11 @@
   </div>
 </template>
 <script>
+import { getcategoods } from "../../util/axios";
 export default {
   data() {
     return {
+      fid: 0,
       head: {
         img1: require("../../assets/images/list_images/arrow.jpg"),
         img2: require("../../assets/images/list_images/logo.jpg")
@@ -68,42 +70,23 @@ export default {
       searchBar: {
         img: require("../../assets/images/list_images/search.jpg")
       },
-      goodsList: [
-        {
-          id: 1,
-          img: require("../../assets/images/list_images/pic1.jpg"),
-          goodsName:
-            "阿道夫修护滋养洗发香乳 洗发水 持久留香520ml*2瓶 旗舰店正品焕新升级款",
-          goodsPrice: 99,
-          comment: 3625
-        },
-        {
-          id: 2,
-          img: require("../../assets/images/list_images/pic2.jpg"),
-          goodsName: "滋源修护滋养洗发香 520ml*2瓶",
-          goodsPrice: 123,
-          comment: 6068
-        },
-        {
-          id: 3,
-          img: require("../../assets/images/list_images/pic3.jpg"),
-          goodsName:
-            "施华蔻修护滋养洗发香乳 洗发水 多效修护520ml*2瓶 旗舰店正品",
-          goodsPrice: 109,
-          comment: 2639
-        },
-        {
-          id: 4,
-          img: require("../../assets/images/list_images/pic4.jpg"),
-          goodsName:
-            "资生堂修护滋养洗发香乳 洗发水 持久留香520ml*2瓶 旗舰店正品焕新升级款",
-          goodsPrice: 129,
-          comment: 8675
-        }
-      ]
+      goodsList: []
     };
   },
+  mounted() {
+    this.fid = this.$route.query.fid;
+    this.getcateGoods(this.fid);
+  },
   methods: {
+    // 获取指定信息列表
+    getcateGoods(fid) {
+      getcategoods({ fid }).then(res => {
+        if (res.data.code == 200) {
+          console.log(res);
+          this.goodsList = res.data.list;
+        }
+      });
+    },
     goDetail() {
       this.$router.push("/proDetail");
     }

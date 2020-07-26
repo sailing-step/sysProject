@@ -1,41 +1,30 @@
 <template>
   <div>
     <div class="container">
-      <!-- <header class="header">
-        <div class="wrap">
-          <a href="javascript:;" @click="$router.go(-1)">
-            <img :src="head.img" alt />
-          </a>
-          <h2>商品分类</h2>
-          <div class="points">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </header>-->
       <top></top>
       <div class="fixed-nav">
         <ul>
-          <li v-for="(item, i) in iconNavList" :key="item.id" @click="sel(i)">
+          <li v-for="(item, i) in navList" :key="item.id" @click="sel(i)">
             <i :class="[i == num ? 'bar' : '']"></i>
-            <a href="javascript:;" :class="[i == num ? 'orange' : '']">{{ item.name }}</a>
+            <a href="javascript:;" :class="[i == num ? 'orange' : '']">{{
+              item.catename
+            }}</a>
           </li>
         </ul>
       </div>
       <div class="content">
         <div>
           <div class="head-nav">
-            <h3>洗发类</h3>
+            <h3>{{ title }}</h3>
             <div class="more">
-              <a href="javascript:;" @click="goSearch">更多></a>
+              <a href="javascript:;" @click="goSearch(fid)">更多></a>
             </div>
           </div>
           <ul class="pro-list">
             <li v-for="(item, index) in goodsList" :key="item.id">
               <a href="javascript:;">
                 <img
-                  :src="item.img"
+                  :src="$imgUrl + item.img"
                   alt
                   :class="{
                     one: index == 0,
@@ -47,76 +36,29 @@
                   }"
                 />
                 <br />
-                {{ item.name }}
+                {{ item.catename }}
               </a>
             </li>
           </ul>
         </div>
-        <div class="head-nav nav">
-          <h3>染发类</h3>
-          <div class="more">
-            <a href="javascript:;">更多></a>
-          </div>
-        </div>
-        <ul class="pro-list list">
-          <li v-for="item in colorList" :key="item.id">
-            <a href="javascript:;">
-              <img :src="item.img" alt class="first" />
-              <br />
-              {{ item.name }}
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { getcate, getcategoods, getcatetree } from "../../util/axios";
+import { mapGetters } from "vuex";
 export default {
+  props: [],
   data() {
     return {
+      title: "",
+      fid: 0,
       head: {
         img: require("../../assets/images/public/arrow.jpg")
       },
       num: 0,
-      iconNavList: [
-        {
-          id: 1,
-          name: "施华蔻"
-        },
-        {
-          id: 2,
-          name: "沙宣"
-        },
-        {
-          id: 3,
-          name: "欧莱雅"
-        },
-        {
-          id: 4,
-          name: "潘婷"
-        },
-        {
-          id: 5,
-          name: "资生堂"
-        },
-        {
-          id: 6,
-          name: "阿道夫"
-        },
-        {
-          id: 7,
-          name: "卡诗"
-        },
-        {
-          id: 8,
-          name: "海飞丝"
-        },
-        {
-          id: 9,
-          name: "飘柔"
-        }
-      ],
+      navList: [],
       goodsList: [
         {
           id: 1,
@@ -148,36 +90,58 @@ export default {
           img: require("../../assets/images/list_images/list02.jpg"),
           name: " 焕彩洗发水"
         }
-      ],
-      colorList: [
-        {
-          id: 1,
-          img: require("../../assets/images/list_images/list.jpg"),
-          name: "  施华蔻染发"
-        },
-        {
-          id: 2,
-          img: require("../../assets/images/list_images/list03.jpg"),
-          name: " 滋养洗发水"
-        },
-        {
-          id: 3,
-          img: require("../../assets/images/list_images/list04.jpg"),
-          name: "  柔顺洗发露"
-        }
       ]
     };
+  },
+  computed: {
+    ...mapGetters(["getNum"])
+  },
+  mounted() {
+    this.fid = this.$route.query.fid;
+    // this.getcateTree();
+    console.log(this.getNum);
+    this.num = this.getNum;
+    getcatetree().then(res => {
+      if (res.data.code == 200) {
+        console.log(res.data.list);
+        this.navList = res.data.list;
+        this.goodsList = res.data.list[this.num].children;
+        this.title = res.data.list[this.num].catename;
+      }
+    });
   },
   methods: {
     sel(i) {
       this.num = i;
+      getcatetree().then(res => {
+        if (res.data.code == 200) {
+          console.log(res.data.list);
+          this.navList = res.data.list;
+          this.goodsList = res.data.list[i].children;
+          this.title = res.data.list[i].catename;
+          this.fid = res.data.list[i].id;
+          console.log(this.fid);
+        }
+      });
     },
-    goSearch() {
-      this.$router.push("/search");
+    goSearch(fid) {
+      console.log(this.$router);
+      this.$router.push({
+        path: "/search",
+        query: {
+          fid
+        }
+      });
+    },
+    // 获取树形结构分类信息
+    getcateTree(i) {
+      getcatetree().then(res => {
+        if (res.data.code == 200) {
+          console.log(res.data.list);
+          this.navList = res.data.list;
+        }
+      });
     }
-  },
-  mounted() {
-    // console.log(this.$route);
   }
 };
 </script>

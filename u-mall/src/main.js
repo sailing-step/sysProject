@@ -3,7 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+//引入状态管理仓库
+import store from './store'
 // 全局安装 mint-ui
 import Mint from 'mint-ui';
 Vue.use(Mint);
@@ -41,6 +42,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

@@ -19,13 +19,13 @@
       <nav class="nav">
         <div class="wrap">
           <ul>
+            <li class="first"><a href="#">推荐</a></li>
             <li
-              @click="sel(i)"
+              @click="sel(i, item.id)"
               v-for="(item, i) in navList"
               :key="item.id"
-              :class="[i == num1 ? 'first' : '']"
             >
-              <a href="#">{{ item.name }}</a>
+              <a href="#">{{ item.catename }}</a>
             </li>
           </ul>
           <span class="arrow">
@@ -150,7 +150,8 @@
   </div>
 </template>
 <script>
-import { getbanner } from "../../util/axios";
+import { getbanner, getcate, getseckill } from "../../util/axios";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -158,48 +159,7 @@ export default {
       img2: require("../../assets/images/index_images/arrow.jpg"),
       num1: 0,
       num: 0,
-      navList: [
-        {
-          id: 1,
-          name: "推荐"
-        },
-        {
-          id: 2,
-          name: "女装"
-        },
-        {
-          id: 3,
-          name: "鞋包"
-        },
-        {
-          id: 4,
-          name: "居家"
-        },
-        {
-          id: 5,
-          name: "母婴儿童"
-        },
-        {
-          id: 6,
-          name: "美食"
-        },
-        {
-          id: 7,
-          name: "果蔬"
-        },
-        {
-          id: 8,
-          name: "果蔬"
-        },
-        {
-          id: 9,
-          name: "果蔬"
-        },
-        {
-          id: 10,
-          name: "果蔬"
-        }
-      ],
+      navList: [],
       bannerList: [],
       iconList: [
         {
@@ -346,13 +306,24 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["getNum"])
+  },
   mounted() {
     this.getBanner();
+    this.getCate();
+    this.getSeck();
   },
   methods: {
-    sel(i) {
-      this.$router.push("/proList");
-      this.num1 = i;
+    sel(i, fid) {
+      console.log(fid);
+      this.$router.push({
+        path: "/proList",
+        query: {
+          fid
+        }
+      });
+      this.$store.dispatch("getActionNum", i);
     },
     select(i) {
       this.num = i;
@@ -369,8 +340,25 @@ export default {
     getBanner() {
       getbanner().then(res => {
         if (res.data.code == 200) {
-          console.log(res.data.list);
+          // console.log(res.data.list);
           this.bannerList = res.data.list;
+        }
+      });
+    },
+    // 获取一级分类信息
+    getCate() {
+      getcate().then(res => {
+        if (res.data.code == 200) {
+          console.log(res);
+          this.navList = res.data.list;
+        }
+      });
+    },
+    // 获取限时秒杀
+    getSeck() {
+      getseckill().then(res => {
+        if (res.data.code == 200) {
+          console.log(res);
         }
       });
     }

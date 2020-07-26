@@ -21,13 +21,16 @@ export function getindexgoods() {
     return http.get('/api/getindexgoods')
 }
 /* ================================== */
-// 获取分类商品
+// 获取分类树形结构
+export function getcatetree() {
+    return http.get('/api/getcatetree')
+}
+// 获取一个分类商品
 export function getcategoods(params) {
-    return http.get('/api/getcategoods', {
+    return http.get('/api/getgoods', {
         params
     })
 }
-
 // 获取一个商品信息
 export function getgoodsinfo(params) {
     return http.get('/api/getgoodsinfo', {
@@ -58,9 +61,9 @@ export function getcartAdd(data) {
 }
 
 // 购物车修改
-export function getcartEdit(data) {
-    return http.post('/api/cartedit', data)
-}
+// export function getcartEdit(data) {
+//     return http.post('/api/cartedit', data)
+// }
 // 购物车删除
 export function getcartDelete(data) {
     return http.post('/api/cartdelete', data)

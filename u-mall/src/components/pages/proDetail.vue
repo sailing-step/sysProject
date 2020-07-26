@@ -1,26 +1,14 @@
 <template>
   <div>
     <div class="container">
-      <!-- <header class="header">
-        <div class="wrap">
-          <a href="javascript:;" @click="$router.go(-1)" class="arrow">
-            <img :src="head.img" alt="" />
-          </a>
-          <h2>商品详情</h2>
-          <div class="points">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </header>-->
       <top></top>
       <div class="content">
         <div class="proinfo">
           <img :src="proInfo.img" alt />
           <h3>{{ proInfo.name }}</h3>
           <p>
-            <span>¥{{ proInfo.price.toFixed(2) }}</span>(此价格不与套装优惠同时享受)
+            <span>¥{{ proInfo.price.toFixed(2) }}</span
+            >(此价格不与套装优惠同时享受)
           </p>
         </div>
         <div class="choose">
@@ -64,7 +52,13 @@
             <p>商品详情</p>
           </div>
           <div class="picInfo">
-            <img :src="item.img" alt class="one" v-for="item in proDetail" :key="item.id" />
+            <img
+              :src="item.img"
+              alt
+              class="one"
+              v-for="item in proDetail"
+              :key="item.id"
+            />
           </div>
         </div>
         <div class="comment">

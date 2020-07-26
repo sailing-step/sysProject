@@ -27,8 +27,7 @@
           native-type="submit"
           style="font-size:0.35rem; width:3rem;margin:0 auto"
           @click="subInfo"
-          >登录</van-button
-        >
+        >登录</van-button>
       </div>
     </van-cell-group>
     <router-link to="/register" class="jump">去注册></router-link>
@@ -42,23 +41,25 @@ export default {
     return {
       userInfo: {
         phone: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
     subInfo(userInfo) {
       // 调取接口
-      login(this.userInfo).then(res => {
+      login(this.userInfo).then((res) => {
         if (res.data.code == 200) {
           this.$toast(res.data.msg);
+          //把登录信息存储到本地存储中
+          sessionStorage.setItem("userInfo", JSON.stringify(res.data.list));
           this.$router.push("/home");
         } else {
           this.$toast(res.data.msg);
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
