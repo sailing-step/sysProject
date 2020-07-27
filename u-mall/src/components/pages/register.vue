@@ -59,6 +59,8 @@
 </template>
 
 <script>
+// 引入轻提示框
+import { Toast } from "vant";
 import { register } from "../../util/axios";
 export default {
   data() {
@@ -81,7 +83,17 @@ export default {
       // 调取接口
       register(this.userInfo).then(res => {
         if (res.data.code == 200) {
-          this.$toast("注册成功");
+          Toast.success(res.data.msg);
+          this.userInfo = {
+            nickname: "",
+            phone: "",
+            password: ""
+          };
+          this.$router.push("/login");
+        } else if (res.code == 500) {
+          Toast.fail(res.data.msg);
+        } else {
+          Toast.fail(res.data.msg);
         }
       });
     },

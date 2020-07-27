@@ -85,9 +85,24 @@
             </div>
           </div>
         </div>
-        <div class="fixed-footer">
-          <a href="#">
-            <div class="car" @click="goCar">
+        <!-- 商品导航 -->
+        <van-goods-action>
+          <van-goods-action-icon icon="chat-o" text="客服" />
+          <van-goods-action-icon
+            icon="cart-o"
+            text="购物车"
+            @click="onClickIcon"
+          />
+          <van-goods-action-icon icon="shop-o" text="店铺" />
+          <van-goods-action-button
+            type="danger"
+            text="加入购物车"
+            @click="onClickButton"
+          />
+        </van-goods-action>
+        <!-- <div class="fixed-footer">
+          <a href="javascript:;" @click="$router.push('/car')">
+            <div class="car">
               <img :src="footer.img" alt />
               <p>购物车</p>
               <div class="count">
@@ -97,12 +112,13 @@
           </a>
           <a href="#" class="prev" @click="addToCar">加入购物车</a>
           <a href="#" class="next">立即购买</a>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 <script>
+import { Toast } from "vant";
 import { getgoodsinfo } from "../../util/axios";
 
 export default {
@@ -118,28 +134,6 @@ export default {
         img: require("../../assets/images/detail_images/arrow.jpg"),
         num: 1
       },
-      proDetail: [
-        {
-          id: 1,
-          img: require("../../assets/images/detail_images/pic_3.jpg")
-        },
-        {
-          id: 2,
-          img: require("../../assets/images/detail_images/pic_4.jpg")
-        },
-        {
-          id: 3,
-          img: require("../../assets/images/detail_images/pic_5.jpg")
-        },
-        {
-          id: 4,
-          img: require("../../assets/images/detail_images/pic_6.jpg")
-        },
-        {
-          id: 5,
-          img: require("../../assets/images/detail_images/pic_7.jpg")
-        }
-      ],
       comment: {
         username: "1235668fg",
         coms: "效果很好，物流到位，下次继续来!",
@@ -173,9 +167,6 @@ export default {
     this.getgoodsInfo(this.id);
   },
   methods: {
-    goCar() {
-      this.$router.push("/car");
-    },
     color(i) {
       this.idx = i;
     },
@@ -199,8 +190,22 @@ export default {
         }
       });
     },
-    // 添加到购物车
-    addToCar() {}
+    onClickIcon() {
+      this.$router.push("/car");
+      // Toast("点击图标");
+    },
+    onClickButton() {
+      //调取加入购物车的方法
+      let isLogin = JSON.parse(sessionStorage.getItem("userInfo"))
+        ? true
+        : false;
+      if (isLogin) {
+        //调取加入购物车方法
+        console.log("加入购物车");
+      } else {
+        Toast("请先登录");
+      }
+    }
   }
 };
 </script>

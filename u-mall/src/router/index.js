@@ -43,8 +43,8 @@ export default new Router({
       ]
     },
     {
-      path: '/proList',
-      component: () => import('@/components/pages/proList'),
+      path: '/classify',
+      component: () => import('@/components/pages/classify'),
       name: '商品分类'
     },
     {
@@ -53,8 +53,8 @@ export default new Router({
       name: '商品详情'
     },
     {
-      path: '/search',
-      component: () => import('@/components/pages/search')
+      path: '/proList',
+      component: () => import('@/components/pages/proList')
     },
     {
       path: '/order',

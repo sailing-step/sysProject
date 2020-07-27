@@ -1,153 +1,97 @@
 <template>
   <div>
     <div class="container">
-      <top></top>
-      <div class="fixed-nav">
-        <ul>
-          <li v-for="(item, i) in navList" :key="item.id" @click="sel(i)">
-            <i :class="[i == num ? 'bar' : '']"></i>
-            <a href="javascript:;" :class="[i == num ? 'orange' : '']">{{
-              item.catename
-            }}</a>
-          </li>
-        </ul>
+      <header class="header">
+        <div class="arrow" @click="$router.go(-1)">
+          <img :src="head.img1" alt="" />
+        </div>
+        <h1>
+          <a href="javascript:;">
+            <img :src="head.img2" alt="" />
+          </a>
+        </h1>
+        <div class="points">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </header>
+      <div class="search-box">
+        <input type="text" placeholder="搜索商品" />
+        <img :src="searchBar.img" alt="" />
       </div>
       <div class="content">
-        <div>
-          <div class="head-nav">
-            <h3>{{ title }}</h3>
-            <div class="more">
-              <a href="javascript:;" @click="goSearch(fid)">更多></a>
-            </div>
+        <div
+          class="proInfo"
+          v-for="item in goodsList"
+          :key="item.id"
+          @click="goDetail(item.id)"
+        >
+          <div class="pic">
+            <a href="#">
+              <img :src="$imgUrl + item.img" alt="" />
+            </a>
           </div>
-          <ul class="pro-list">
-            <li v-for="(item, index) in goodsList" :key="item.id">
-              <a href="javascript:;">
-                <img
-                  :src="$imgUrl + item.img"
-                  alt
-                  :class="{
-                    one: index == 0,
-                    two: index == 1,
-                    three: index == 2,
-                    four: index == 3,
-                    five: index == 4,
-                    six: index == 5
-                  }"
-                />
-                <br />
-                {{ item.catename }}
-              </a>
-            </li>
-          </ul>
+          <div class="txt">
+            <h3>{{ item.goodsname }}</h3>
+            <p class="first"><span>¥</span>{{ item.price.toFixed(2) }}</p>
+            <!-- <p class="second">{{ item.comment }}条评论</p> -->
+          </div>
+        </div>
+      </div>
+      <div class="fixed-menu">
+        <div class="con">
+          <div class="nav">
+            <router-link activeClass="active" to="/home"
+              ><i></i>首页</router-link
+            >
+            <router-link activeClass="active" to="/car"
+              ><i></i>购物车</router-link
+            >
+            <router-link activeClass="active" to="/mine"
+              ><i></i>我的</router-link
+            >
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { getcate, getcategoods, getcatetree } from "../../util/axios";
-import { mapGetters } from "vuex";
+import { getcategoods } from "../../util/axios";
 export default {
-  props: [],
   data() {
     return {
-      title: "",
       fid: 0,
       head: {
-        img: require("../../assets/images/public/arrow.jpg")
+        img1: require("../../assets/images/list_images/arrow.jpg"),
+        img2: require("../../assets/images/list_images/logo.jpg")
       },
-      num: 0,
-      navList: [],
-      goodsList: [
-        {
-          id: 1,
-          img: require("../../assets/images/classify/shop_1.jpg"),
-          name: " 护亮泽洗发水"
-        },
-        {
-          id: 2,
-          img: require("../../assets/images/list_images/pic1.jpg"),
-          name: " 滋养洗发水"
-        },
-        {
-          id: 3,
-          img: require("../../assets/images/list_images/pic2.jpg"),
-          name: "  柔顺洗发露"
-        },
-        {
-          id: 4,
-          img: require("../../assets/images/list_images/pic3.jpg"),
-          name: "  去屑洗发露"
-        },
-        {
-          id: 5,
-          img: require("../../assets/images/list_images/list01.jpg"),
-          name: "  柔顺洗发露"
-        },
-        {
-          id: 6,
-          img: require("../../assets/images/list_images/list02.jpg"),
-          name: " 焕彩洗发水"
-        }
-      ]
+      searchBar: {
+        img: require("../../assets/images/list_images/search.jpg")
+      },
+      goodsList: []
     };
-  },
-  computed: {
-    ...mapGetters(["getNum"])
   },
   mounted() {
     this.fid = this.$route.query.fid;
-    // this.getcateTree();
-    console.log(this.getNum);
-    this.num = this.getNum;
-    getcatetree().then(res => {
-      if (res.data.code == 200) {
-        console.log(res.data.list);
-        this.navList = res.data.list;
-        this.goodsList = res.data.list[this.num].children;
-        this.title = res.data.list[this.num].catename;
-      }
-    });
+    this.getcateGoods(this.fid);
   },
   methods: {
-    sel(i) {
-      this.num = i;
-      getcatetree().then(res => {
+    // 获取指定信息列表
+    getcateGoods(fid) {
+      getcategoods({ fid }).then(res => {
         if (res.data.code == 200) {
-          console.log(res.data.list);
-          this.navList = res.data.list;
-          this.goodsList = res.data.list[i].children;
-          console.log(this.goodsList);
-          this.title = res.data.list[i].catename;
-          this.fid = res.data.list[i].id;
-          console.log(this.fid);
+          console.log(res);
+          this.goodsList = res.data.list;
         }
       });
     },
-    goSearch(fid) {
-      console.log(this.$router);
+    goDetail(id) {
       this.$router.push({
-        path: "/search",
+        path: "/proDetail",
         query: {
-          fid
-        }
-      });
-    },
-    // goDetail(id) {
-    //   this.$router.push({
-    //     path: "/proDetail",
-    //     query: {
-    //       id
-    //     }
-    //   });
-    // },
-    // 获取树形结构分类信息
-    getcateTree(i) {
-      getcatetree().then(res => {
-        if (res.data.code == 200) {
-          console.log(res.data.list);
-          this.navList = res.data.list;
+          id
         }
       });
     }
@@ -155,5 +99,11 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../assets/css/proList.css";
+@import "../../assets/css/proClassify.css";
+.fixed-menu .nav .active {
+  color: #f26b11;
+}
+.header {
+  border-bottom: none !important;
+}
 </style>

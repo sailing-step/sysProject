@@ -130,7 +130,7 @@ export default {
   }
 };
 </script>
-<style scope>
+<style scoped>
 @import "../../assets/css/shop.css";
 
 .count .all .select input {

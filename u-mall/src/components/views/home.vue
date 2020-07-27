@@ -41,7 +41,12 @@
         </mt-swipe-item>
       </mt-swipe>
       <div class="icon-nav">
-        <div class="item" v-for="item in iconList" :key="item.id">
+        <div
+          class="item"
+          v-for="(item, index) in iconList"
+          :key="item.id"
+          @click="goList(index)"
+        >
           <a href="javascript:;">
             <img :src="item.img" alt />
             <p>{{ item.name }}</p>
@@ -51,12 +56,21 @@
       <div class="sale">
         <div class="left">
           <a href="#">
-            <h3><img :src="sale[0].img1" alt />限时秒杀</h3>
+            <h3><img :src="sale[0].img1" alt />{{ title }}</h3>
             <p class="des">每天零点场 好货秒不停</p>
             <p class="time">
-              <span>19</span>： <span>30</span>：
-              <span>29</span>
-              <i>秒杀</i>
+              <!-- <span>19</span>： <span>30</span>：
+              <span>29</span> -->
+              <van-count-down :time="timer">
+                <template v-slot="timeData">
+                  <span class="block">{{ timeData.hours }}</span>
+                  <span class="colon">:</span>
+                  <span class="block">{{ timeData.minutes }}</span>
+                  <span class="colon">:</span>
+                  <span class="block">{{ timeData.seconds }}</span>
+                </template>
+              </van-count-down>
+              <!-- <i>秒杀</i> -->
             </p>
             <img class="pic" :src="sale[1].img2" alt />
             <div class="price">
@@ -110,51 +124,61 @@
       </div>
       <div class="pro-list">
         <div class="wrap">
-          <div class="find-nav">
-            <ul class="find">
-              <li
-                @click="select(i)"
-                :class="[i == num ? 'first last' : 'last']"
-                v-for="(item, i) in topList"
+          <!-- 商品切换 -->
+          <van-tabs type="card">
+            <van-tab title="热门推荐">
+              <van-card
+                v-for="item in hotsList"
                 :key="item.id"
-              >
-                <a href="javascript:;">{{ item.title }}</a>
-              </li>
-            </ul>
-          </div>
-
-          <div
-            class="pro-info"
-            v-for="list in topList[num].goodsList"
-            :key="list.id"
-          >
-            <div class="item">
-              <div class="pic">
-                <a href="javascript:;">
-                  <img :src="list.imgUrl" alt />
-                </a>
-              </div>
-              <div class="detail">
-                <a href="javascript:;">
-                  <h3>{{ list.goodsName }}</h3>
-                  <p>¥{{ list.goodsPrice | toPrice }}</p>
-                </a>
-                <span class="two">已售{{ list.sold }}件</span>
-                <a href="javascript:;" class="fast">立即抢购</a>
-              </div>
-            </div>
-          </div>
+                class="card"
+                :price="item.price.toFixed(2)"
+                :title="item.goodsname"
+                :thumb="$imgUrl + item.img"
+                @click="goDetail(item.id)"
+              />
+            </van-tab>
+            <van-tab title="发现新品">
+              <van-card
+                v-for="item in newsList"
+                :key="item.id"
+                class="card"
+                :price="item.price.toFixed(2)"
+                :title="item.goodsname"
+                :thumb="$imgUrl + item.img"
+              />
+            </van-tab>
+            <van-tab title="全部商品">
+              <van-card
+                v-for="item in goodsList"
+                :key="item.id"
+                class="card"
+                :price="item.price.toFixed(2)"
+                :title="item.goodsname"
+                :thumb="$imgUrl + item.img"
+              />
+            </van-tab>
+          </van-tabs>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { getbanner, getcate, getseckill } from "../../util/axios";
+import axios from "axios";
+import {
+  getbanner,
+  getcate,
+  getseckill,
+  getindexgoods
+} from "../../util/axios";
 import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      title: "",
+      timer: 30 * 60 * 60 * 1000,
+      start: 0,
+      end: 0,
       img: require("../../assets/images/index_images/logo.jpg"),
       img2: require("../../assets/images/index_images/arrow.jpg"),
       num1: 0,
@@ -206,119 +230,40 @@ export default {
       poster: {
         imgUrl: require("../../assets/images/index_images/bar.jpg")
       },
-      topList: [
-        {
-          id: 1,
-          title: "热门推荐",
-          goodsList: [
-            {
-              goodsName: "雅诗兰黛面霜50ml",
-              goodsPrice: 800,
-              sold: 800,
-              imgUrl: require("../../assets/images/index_images/shop_4.jpg")
-            },
-            {
-              goodsName: "澳洲绵羊油面霜gm",
-              goodsPrice: 23,
-              sold: 694,
-              imgUrl: require("../../assets/images/index_images/shop_6.jpg")
-            },
-            {
-              goodsName: "Kiehls科颜氏高保湿面霜",
-              goodsPrice: 315,
-              sold: 2564,
-              imgUrl: require("../../assets/images/index_images/shop_7.jpg")
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: "发现好货",
-          goodsList: [
-            {
-              goodsName: "OMEGA自动机械男士腕表",
-              goodsPrice: 33600,
-              sold: 8,
-              imgUrl: require("../../assets/images/index_images/watch1.jpg")
-            },
-            {
-              goodsName: "OMEGA女士自动机械表",
-              goodsPrice: 54160,
-              sold: 6,
-              imgUrl: require("../../assets/images/index_images/watch2.jpg")
-            },
-            {
-              goodsName: "OMEGA海马系列机械男表",
-              goodsPrice: 35440,
-              sold: 4,
-              imgUrl: require("../../assets/images/index_images/watch3.jpg")
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: "只看专场",
-          goodsList: [
-            {
-              goodsName: "玉兰油水漾动力保湿露50g",
-              goodsPrice: 99,
-              sold: 80,
-              imgUrl: require("../../assets/images/index_images/oaly1.png")
-            },
-            {
-              goodsName: "玉兰油(OLAY)多效修护霜50g",
-              goodsPrice: 150,
-              sold: 39000,
-              imgUrl: require("../../assets/images/index_images/oaly2.jpg")
-            },
-            {
-              goodsName: "OLAY玉兰油新生塑颜金纯面霜",
-              goodsPrice: 179,
-              sold: 800,
-              imgUrl: require("../../assets/images/index_images/oaly3.jpg")
-            }
-          ]
-        },
-        {
-          id: 4,
-          title: "只看商品",
-          goodsList: [
-            {
-              goodsName: "Balea保湿面霜",
-              goodsPrice: 80,
-              sold: 800,
-              imgUrl: require("../../assets/images/index_images/Balea.jpg")
-            },
-            {
-              goodsName: "SK-II超肌能紧致大红瓶",
-              goodsPrice: 899,
-              sold: 1600,
-              imgUrl: require("../../assets/images/index_images/skii.jpg")
-            },
-            {
-              goodsName: "SK-II青春露230ml",
-              goodsPrice: 1155,
-              sold: 900,
-              imgUrl: require("../../assets/images/index_images/skii2.png")
-            }
-          ]
-        }
-      ]
+      hotsList: [],
+      newsList: [],
+      goodsList: []
     };
   },
   computed: {
     ...mapGetters(["getNum"])
   },
   mounted() {
-    this.getBanner();
+    // 组件一加载，就调取并发处理
+    axios.all([getbanner(), getindexgoods(), getseckill()]).then(
+      axios.spread((banners, goods, seckList) => {
+        this.bannerList = banners.data.list;
+        this.hotsList = goods.data.list[0].content;
+        this.newsList = goods.data.list[1].content;
+        this.goodsList = goods.data.list[2].content;
+        // console.log(seckList, "秒杀信息");
+        this.title = seckList.data.list[0].title;
+        this.start = seckList.data.list[0].begintime;
+        this.end = Number(seckList.data.list[0].endtime);
+        let timer = this.end - new Date().getTime();
+        //倒计时思路： 获取结束时间与当前时间进行差值
+        //把得到的结果进行转化
+        console.log(timer);
+        this.timer = timer;
+      })
+    );
     this.getCate();
-    this.getSeck();
   },
   methods: {
     sel(i, fid) {
       console.log(fid);
       this.$router.push({
-        path: "/proList",
+        path: "/classify",
         query: {
           fid
         }
@@ -336,15 +281,6 @@ export default {
       this.$refs.show.parentNode.style.display = "none";
       console.log(this.$refs.show.parentNode.previousElementSibling);
     },
-    // 获取轮播图列表
-    getBanner() {
-      getbanner().then(res => {
-        if (res.data.code == 200) {
-          // console.log(res.data.list);
-          this.bannerList = res.data.list;
-        }
-      });
-    },
     // 获取一级分类信息
     getCate() {
       getcate().then(res => {
@@ -354,11 +290,19 @@ export default {
         }
       });
     },
-    // 获取限时秒杀
-    getSeck() {
-      getseckill().then(res => {
-        if (res.data.code == 200) {
-          console.log(res);
+    // 从商品分类点击进入列表页
+    goList(index) {
+      if (index == 3) {
+        this.$router.push("/classify");
+      }
+    },
+    // 点击商品进入详情页
+    goDetail(id) {
+      console.log(id);
+      this.$router.push({
+        path: "/proDetail",
+        query: {
+          id
         }
       });
     }
@@ -367,11 +311,43 @@ export default {
 </script>
 <style lang="" scoped>
 @import "../../assets/css/index.css";
+.van-count-down {
+  float: left;
+  margin-right: 0.1rem;
+}
 .mint-swipe {
   height: 2.91rem;
 }
 .mint-swipe-item a img {
   width: 7.5rem;
   height: 2.91rem;
+}
+
+.van-tabs__nav--card .van-tab.van-tab--active {
+  color: #fff;
+  background-color: #f26b11 !important;
+}
+.van-tabs__nav--card {
+  box-sizing: border-box;
+  height: 30px;
+  margin: 0 16px;
+  border: 1px solid #f26b11 !important;
+  border-radius: 2px;
+}
+
+.van-tabs__wrap >>> .van-tabs__nav--card .van-tab {
+  color: #0c0c0c !important;
+  border-right: 1px solid #e4e4e4 !important;
+}
+
+.van-card__price {
+  color: #f26b11 !important;
+}
+.van-card {
+  box-shadow: 0.06rem -0.03rem 0.06rem #e9e9e9, -0.06rem 0.03rem 0.06rem #e9e9e9;
+  padding-top: 0.46rem;
+}
+.van-card:nth-child(1) {
+  margin-top: 0.2rem;
 }
 </style>

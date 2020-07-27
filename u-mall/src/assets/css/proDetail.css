@@ -14,6 +14,7 @@ body {
 
 .wrap {
   width: 7.1rem;
+  margin: 0 auto;
 }
 
 .header {
@@ -21,10 +22,11 @@ body {
   top: 0;
   left: 50%;
   margin-left: -3.75rem;
-  width: 7.5rem;
   height: 0.88rem;
+  width: 7.5rem;
   background-color: #f26b11;
   z-index: 999;
+  /* overflow: hidden; */
 }
 
 .header .wrap {
@@ -32,16 +34,19 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
 }
 
 .header .wrap .arrow {
   margin-left: 0.1rem;
 }
 
-.header .wrap .arrow img {
+/* .header .wrap .arrow img {
   width: 0.16rem;
   height: 0.28rem;
+} */
+.header img {
+  width: 0.17rem;
+  height: 0.29rem;
 }
 
 .header .wrap p {
@@ -49,17 +54,18 @@ body {
   color: #fff;
 }
 
-.header .wrap .points {
-  margin-right: 0.1rem;
+.header h2 {
+  font-size: 0.36rem;
+  color: #fff;
 }
 
-.header .wrap .points span {
-  float: left;
-  margin-left: 0.1rem;
-  width: 0.13rem;
-  height: 0.13rem;
-  border-radius: 50%;
+.header .points span {
+  display: inline-block;
+  margin-left: 0.08rem;
+  width: 0.12rem;
+  height: 0.12rem;
   background-color: #fff;
+  border-radius: 50%;
 }
 
 .content {

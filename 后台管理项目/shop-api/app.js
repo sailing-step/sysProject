@@ -4,8 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const dbObj = require("./utils/Db"); // 数据库对象
-const {Guest,MError} = require("./utils/Result"); // 封装统一接口返回方法
-const {checkToken,getuid} = require("./utils"); // 登录拦截中间件
+const { Guest, MError } = require("./utils/Result"); // 封装统一接口返回方法
+const { checkToken, getuid } = require("./utils"); // 登录拦截中间件
 const { validator } = require("./validator"); // 参数合法性校验
 var app = express();
 app.use(dbObj.connection); // 使用单例模式建立数据库连接， 给express应用对象添加中间件功能
@@ -39,7 +39,7 @@ app.use(async (req, res, next) => {
         res.send(MError("请设置请求头,并携带验证字符串"));
     } else {
         if (!await checkToken(req)) { // 过期  
-            res.send(Guest([],"登录已过期或访问权限受限"));
+            res.send(Guest([], "登录已过期或访问权限受限"));
         } else {
             next();
         }

@@ -10,7 +10,7 @@
                 <img :src="member.img" alt />
               </div>
               <div class="txt">
-                <p>悠溯</p>
+                <p>{{ userInfo.nickname }}</p>
                 <span>v1</span>
               </div>
             </div>
@@ -45,51 +45,22 @@
                 </a>
               </div>
             </div>
-            <!-- <div class="item item1">
-              <div class="right">
-                <img src="./images/mine_images/icon_5.jpg" alt="" />
-                <span>我的钱包</span>
-              </div>
-              <div class="left">
-                <span>200余额</span>
-                <a href="#">
-                  <img src="./images/order/arrow.jpg" alt="" />
-                </a>
-              </div>
+            <div class="isLogin">
+              <van-button
+                v-if="userInfo.nickname"
+                type="primary"
+                plain
+                @click="quit"
+                >退出登录</van-button
+              >
+              <van-button
+                v-else
+                type="primary"
+                plain
+                @click="$router.push('/login')"
+                >未登录</van-button
+              >
             </div>
-            <div class="item item2">
-              <div class="right">
-                <img src="./images/mine_images/icon_6.jpg" alt="" />
-                <span>我的优惠券</span>
-              </div>
-              <div class="left">
-                <a href="#">
-                  <img src="./images/order/arrow.jpg" alt="" />
-                </a>
-              </div>
-            </div>
-            <div class="item item3">
-              <div class="right">
-                <img src="./images/mine_images/icon_7.jpg" alt="" />
-                <span>我的二维码</span>
-              </div>
-              <div class="left">
-                <a href="#">
-                  <img src="./images/order/arrow.jpg" alt="" />
-                </a>
-              </div>
-            </div>
-            <div class="item item4">
-              <div class="right">
-                <img src="./images/mine_images/icon_8.jpg" alt="" />
-                <span>我的小伙伴</span>
-              </div>
-              <div class="left">
-                <a href="#">
-                  <img src="./images/order/arrow.jpg" alt="" />
-                </a>
-              </div>
-            </div>-->
           </div>
         </div>
       </div>
@@ -100,6 +71,7 @@
 export default {
   data() {
     return {
+      userInfo: {},
       head: {
         img: require("../../assets/images/public/arrow.jpg")
       },
@@ -156,9 +128,27 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    // 组件一加载 就获取登录信息
+    this.userInfo = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo"))
+      : {};
+  },
+  methods: {
+    // 退出登录时间
+    quit() {
+      //清除登录信息
+      sessionStorage.removeItem("userInfo");
+      this.userInfo = {};
+    }
   }
 };
 </script>
-<style scope>
+<style scoped>
 @import "../../assets/css/mine.css";
+.isLogin {
+  margin-top: 0.5rem;
+  text-align: center;
+}
 </style>
