@@ -125,7 +125,9 @@
       <div class="pro-list">
         <div class="wrap">
           <!-- 商品切换 -->
-          <van-tabs type="card">
+          <!-- color="#f26b11"
+            title-active-color="#fff" -->
+          <van-tabs type="card" class="reset">
             <van-tab title="热门推荐">
               <van-card
                 v-for="item in hotsList"
@@ -145,6 +147,7 @@
                 :price="item.price.toFixed(2)"
                 :title="item.goodsname"
                 :thumb="$imgUrl + item.img"
+                @click="goDetail(item.id)"
               />
             </van-tab>
             <van-tab title="全部商品">
@@ -155,6 +158,7 @@
                 :price="item.price.toFixed(2)"
                 :title="item.goodsname"
                 :thumb="$imgUrl + item.img"
+                @click="goDetail(item.id)"
               />
             </van-tab>
           </van-tabs>
@@ -322,24 +326,10 @@ export default {
   width: 7.5rem;
   height: 2.91rem;
 }
-
 .van-tabs__nav--card .van-tab.van-tab--active {
-  color: #fff;
+  color: #fff !important;
   background-color: #f26b11 !important;
 }
-.van-tabs__nav--card {
-  box-sizing: border-box;
-  height: 30px;
-  margin: 0 16px;
-  border: 1px solid #f26b11 !important;
-  border-radius: 2px;
-}
-
-.van-tabs__wrap >>> .van-tabs__nav--card .van-tab {
-  color: #0c0c0c !important;
-  border-right: 1px solid #e4e4e4 !important;
-}
-
 .van-card__price {
   color: #f26b11 !important;
 }

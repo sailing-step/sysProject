@@ -60,10 +60,6 @@ export function getcartAdd(data) {
     return http.post('/api/cartadd', data)
 }
 
-// 购物车修改
-// export function getcartEdit(data) {
-//     return http.post('/api/cartedit', data)
-// }
 // 购物车删除
 export function getcartDelete(data) {
     return http.post('/api/cartdelete', data)

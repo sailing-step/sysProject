@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow:hidden">
     <header class="header">
       <div class="wrap">
         <a href="javascript:;" @click="$router.go(-1)">

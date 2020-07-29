@@ -19,6 +19,8 @@ import 'vant/lib/index.css'
 
 // 引入清除默认样式文件
 import './assets/css/reset.css'
+// 改变组件样式，覆盖
+import './assets/css/resetUI.css'
 
 import './assets/js/remScale.js'
 

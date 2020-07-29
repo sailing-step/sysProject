@@ -112,14 +112,14 @@
           </a>
           <a href="#" class="prev" @click="addToCar">加入购物车</a>
           <a href="#" class="next">立即购买</a>
-        </div> -->
+        </div>-->
       </div>
     </div>
   </div>
 </template>
 <script>
 import { Toast } from "vant";
-import { getgoodsinfo } from "../../util/axios";
+import { getgoodsinfo, getcartAdd } from "../../util/axios";
 
 export default {
   data() {
@@ -191,8 +191,8 @@ export default {
       });
     },
     onClickIcon() {
-      this.$router.push("/car");
-      // Toast("点击图标");
+      // this.$router.push("/car");
+      Toast("点击图标");
     },
     onClickButton() {
       //调取加入购物车的方法
@@ -202,8 +202,23 @@ export default {
       if (isLogin) {
         //调取加入购物车方法
         console.log("加入购物车");
+        getcartAdd({
+          uid: JSON.parse(sessionStorage.getItem("userInfo")).uid,
+          goodsid: this.$route.query.id,
+          num: this.choose.num
+        }).then(res => {
+          if (res.data.code == 200) {
+            Toast(res.data.msg);
+            // 跳转到购物车页面
+            this.$router.push("/car");
+          } else {
+            Toast(res.data.msg);
+          }
+        });
       } else {
         Toast("请先登录");
+        // 跳转到登录页面
+        this.$router.push("/login");
       }
     }
   }

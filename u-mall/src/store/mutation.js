@@ -3,4 +3,7 @@ export default {
     reqgetNum(state, payload) {
         state.i = payload
     },
+    reqgetCarList(state, payload) {
+        state.carList = payload
+    }
 }
