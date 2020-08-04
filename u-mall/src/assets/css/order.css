@@ -126,6 +126,9 @@ body {
   color: #5c5c5c;
   line-height: 0.46rem;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 2rem;
 }
 
 .content .mode .item .txt p {
@@ -135,7 +138,7 @@ body {
 .content .mode .item .price {
   font-size: 0.28rem;
   color: #e72734;
-  margin-left: 2.9rem;
+  margin-left: 2.3rem;
   margin-top: 0.2rem;
 }
 

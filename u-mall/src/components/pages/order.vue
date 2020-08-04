@@ -6,8 +6,8 @@
         <div class="contact">
           <div class="txt">
             <p class="user">
-              收货人：{{ contact.username }}
-              <span>{{ contact.phone }}</span>
+              收货人：{{ userInfo.nickname }}
+              <span>{{ userInfo.phone }}</span>
             </p>
             <p class="address">
               收货地址：
@@ -18,23 +18,23 @@
             <img :src="contact.img" alt />
           </a>
         </div>
-        <div class="mode">
+        <div class="mode" v-for="(item,index) in checkGoods" :key="item.id">
           <div class="item">
-            <img :src="mode.img" alt />
+            <img :src="$imgUrl+item.img" alt />
             <div class="txt">
-              <h3>{{ mode.name }}</h3>
-              <p>规格：{{ mode.size }}</p>
+              <h3>{{item.goodsname }}</h3>
+              <p>规格：</p>
             </div>
             <p class="price">
-              <span>¥{{ mode.price.toFixed(2) }}</span>
+              <span>¥{{ item.price.toFixed(2) }}</span>
             </p>
           </div>
           <div class="amount">
             <p>购买数量：</p>
             <div class="number">
-              <i @click="sub()"></i>
-              <span>{{ mode.count }}</span>
-              <em @click="add()"></em>
+              <i @click="sub(index)"></i>
+              <span>{{ item.num }}</span>
+              <em @click="add(index)"></em>
             </div>
           </div>
           <div class="way">
@@ -63,7 +63,7 @@
           <div class="price-list">
             <div class="item">
               <p class="east">商品金额</p>
-              <p class="west">¥{{ mode.price.toFixed(2) }}</p>
+              <p class="west">¥{{ price }}.00</p>
             </div>
             <div class="item">
               <p class="east">运费</p>
@@ -85,7 +85,7 @@
           <div class="last-step">
             <p>
               实付金额：
-              <span>¥{{ (mode.price * mode.count).toFixed(2) }}</span>
+              <span>¥{{price }}.00</span>
             </p>
             <div class="submit">
               <a href="javascript:;">提交订单</a>
@@ -116,35 +116,57 @@ export default {
   data() {
     return {
       head: {
-        img: require("../../assets/images/public/arrow.jpg")
+        img: require("../../assets/images/public/arrow.jpg"),
       },
       contact: {
         username: "YouSu",
         phone: "17865212608",
         address: "北京市海淀区隐泉路清林苑6号楼中公优就业总部3层",
-        img: require("../../assets/images/order/arrow.jpg")
+        img: require("../../assets/images/order/arrow.jpg"),
       },
       mode: {
         img: require("../../assets/images/order/shop.jpg"),
         name: "雅诗兰黛护肤霜",
         size: "50g",
         price: 800,
-        count: 1
-      }
+        count: 1,
+      },
+      checkGoods: [],
+      userInfo: {},
+      allPrice: "",
     };
   },
+  computed: {
+    price() {
+      let sum = 0;
+      this.checkGoods.map((item) => {
+        sum += item.price * item.num;
+      });
+      return sum;
+    },
+  },
+  mounted() {
+    this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+      ? JSON.parse(sessionStorage.getItem("userInfo"))
+      : {};
+    this.checkGoods = JSON.parse(sessionStorage.getItem("checkGoods"));
+    this.allPrice = JSON.parse(sessionStorage.getItem("allPrice")) / 100;
+    console.log(this.userInfo);
+    console.log(this.checkGoods);
+    console.log(this.allPrice);
+  },
   methods: {
-    sub() {
-      if (this.mode.count == 1) {
-        this.mode.count = 1;
+    sub(i) {
+      // console.log(i, "选中的索引");
+      if (this.checkGoods[i].num == 1) {
         return;
       }
-      this.mode.count--;
+      this.checkGoods[i].num--;
     },
-    add() {
-      this.mode.count++;
-    }
-  }
+    add(i) {
+      this.checkGoods[i].num++;
+    },
+  },
 };
 </script>
 <style scoped>

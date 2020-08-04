@@ -1,107 +1,121 @@
 import React, { Component } from 'react'
+// 引入axios库
+import axios from 'axios'
+// 引入swiper.css
+import 'swiper/css/swiper.min.css'
+import 'swiper/js/swiper.min.js'
+// 调用swiper插件
+import Swiper from 'swiper'
 import '../../assets/css/home.css'
+import { personalized, banner, newsong } from '../../util/axios'
 export default class Home extends Component {
     constructor() {
         super()
         this.state = {
-            songInfo: [
-                {
-                    id: 1,
-                    img: require('../../assets/images/remd01.jpg'),
-                    count: '3.4亿',
-                    title: '[VIP专享] 一周新歌推荐',
-                },
-                {
-                    id: 2,
-                    img: require('../../assets/images/remd02.jpg'),
-                    count: '15.2万',
-                    title: '这个世界很大，可是没人听我说话',
-                },
-                {
-                    id: 3,
-                    img: require('../../assets/images/remd03.jpg'),
-                    count: '177.1万',
-                    title: '中文DJ（电摇版）（车载DJ）开车驾车必听',
-                },
-                {
-                    id: 4,
-                    img: require('../../assets/images/remd04.jpg'),
-                    count: '194.2万',
-                    title: '好听的歌没有完整版，就像喜欢的人没有结局',
-                },
-                {
-                    id: 5,
-                    img: require('../../assets/images/remd05.jpg'),
-                    count: '191.4万',
-                    title: 'KORG P1000电子琴',
-                },
-                {
-                    id: 6,
-                    img: require('../../assets/images/remd06.jpg'),
-                    count: '138万',
-                    title: '维吾尔语精选歌曲',
-                },
-            ],
+            bannerList: [],
+            songInfo: [],
             songList: [
-                {
-                    id: 1,
-                    songName: '午后红茶',
-                    songInfo: '张国荣'
-                },
-                {
-                    id: 2,
-                    songName: '你走',
-                    songInfo: '李宗锦'
-                },
-                {
-                    id: 3,
-                    songName: '海底',
-                    songInfo: '一枝榴莲'
-                },
-                {
-                    id: 4,
-                    songName: '夏天的风',
-                    songInfo: '火羊瞌睡了'
-                },
-                {
-                    id: 5,
-                    songName: '雨爱',
-                    songInfo: '周星星'
-                },
-                {
-                    id: 6,
-                    songName: '睹物思人',
-                    songInfo: '武艺'
-                }
+
             ]
         }
     }
+    // 调用挂载函数
+    componentDidMount() {
+        // 组件一加载就调取推荐歌单，banner，最新音乐的接口
+        axios.all([personalized({ limit: 6 }), banner(), newsong()]).then(axios.spread((songInfo, bannerList, songList) => {
+            // console.log(songInfo)
+            if (bannerList.code === 200) {
+                // 可以通过filter 对数组进行过滤
+                let banners = bannerList.banners.filter((item, i) => i < 4)
+                this.setState({
+                    bannerList: banners
+                }, () => {
+                    //调用轮播图
+                    let swiper = new Swiper('.swiper-container', {
+                        autoplay: {
+                            delay: 3000,
+                        },
+                        loop: true,
+                        pagination: {
+                            el: '.swiper-pagination',
+                        }
+                    });
+                })
+            }
+            if (songInfo.code === 200) {
+                this.setState({
+                    songInfo: songInfo.result
+                })
+            }
+            if (songList.code === 200) {
+                this.setState({
+                    songList: songList.result
+                })
+            }
+
+        }))
+    }
     // 封装一个跳转到推荐列表页面
-    toList(id) {
+    toDetail(id) {
+        console.log(id)
         this.props.history.push({
-            pathname: '/list',
+            pathname: '/detail',
             state: {
                 id
             }
         })
     }
+    // 封装一个数字转化的方法，以万和亿为单位
+    tranNumber(num, point) {
+        // num:需要转化的数
+        // point:需要保留的小数位数
+        let numStr = num.toString()
+        // 十万以内直接返回
+        if (numStr.length < 6) {
+            return numStr;
+        }
+        // 大于8位是亿
+        else if (numStr.length > 8) {
+            let decimal = numStr.substring(numStr.length - 8, + numStr.length - 8 + point)
+            return parseFloat(parseInt(num / 100000000) + '.' + decimal) + '亿'
+        }
+        // 大于6位数的是十万(以10万为分割 10万以下全部显示)
+        else if (numStr.length > 5) {
+            let decimal = numStr.substring(numStr.length - 4, numStr.length - 4 + point)
+            return parseFloat(parseInt(num / 10000) + '.' + decimal) + '万'
+        }
+    }
     render() {
-        const { songInfo, songList } = this.state
+        const { songInfo, songList, bannerList } = this.state
         return (
             <div className="home">
                 <div className="container">
+                    <div className="swiper-container">
+                        <div className="swiper-wrapper">
+                            {
+                                bannerList.map(item => {
+                                    return <div key={item.imageUrl} className="swiper-slide">
+                                        <img className='imgUrl' src={item.imageUrl} alt="" />
+                                    </div>
+                                })
+                            }
+                        </div>
+                        {/* 分页器。如果放置在swiper-container外面，需要自定义样式。 */}
+                        <div className="swiper-pagination"></div>
+                    </div>
                     <h2 className="remd_tl">推荐歌单</h2>
                     <div className="remd_song">
                         <div className="remd_ul">
                             {
                                 songInfo.map(item => {
-                                    return <a href="#" className="remd_li" key={item.id} onClick={this.toList.bind(this, item.id)}>
+                                    return <div className="remd_li" key={item.id} onClick={this.toDetail.bind(this, item.id)}>
                                         <div className="remd_img">
-                                            <img className="u-img" src={item.img} />
-                                            <span className="u-earp remd_lnum">{item.count}</span>
+                                            <img className="u-img" src={item.picUrl} />
+                                            {/* <span className="u-earp remd_lnum">{item.playCount}</span> */}
+                                            <span className="u-earp remd_lnum">{this.tranNumber(item.playCount, 1)}</span>
                                         </div>
-                                        <p className="remd_text">{item.title}</p>
-                                    </a>
+                                        <p className="remd_text">{item.name}</p>
+                                    </div>
                                 })
                             }
                         </div>
@@ -110,18 +124,35 @@ export default class Home extends Component {
                     <div className="remd_newsg">
                         <div className="sglist">
                             {
-                                songList.map(item => {
-                                    return <a href="#" className="sgitem" key={item.id}>
+                                songList.map((item, i) => {
+
+                                    return <div className="sgitem" key={item.id}>
                                         <div className="sgfr">
                                             <div className="innerfl">
-                                                <div className=" f-thide sgtl">{item.songName}</div>
-                                                <div className=" f-thide sginfo">{item.songInfo}</div>
+                                                <div className=" f-thide sgtl">{item.song.name}
+                                                    {
+                                                        item.song.alias ? item.song.alias.map(item => {
+                                                            return <span className="sgalia" key={item}>({item})</span>
+                                                        }) : ""
+                                                    }
+
+                                                </div>
+                                                <div className=" f-thide sginfo">
+                                                    <i className="u-hmsprt sghot"></i>
+                                                    {
+                                                        item.song.artists ?
+                                                            item.song.artists.map(item => {
+                                                                return <span className="artist" key={item.id}>{item.name}<i>/</i></span>
+                                                            })
+                                                            : ''
+                                                    }-{item.song.album.name}
+                                                </div>
                                             </div>
                                             <div className="innerfr">
                                                 <span className="u-hmsprt sgchply"></span>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 })
                             }
                         </div>

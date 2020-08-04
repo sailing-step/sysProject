@@ -1,9 +1,9 @@
 .search {
-    font-size: 20px;
-    height: 100vh;
+    font-size: 14px;
+    /* height: 100vh; */
 }
 
-.search .am-search {
+/* .search .am-search {
     padding: 8px 8px;
     background-color: #fff;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
@@ -12,11 +12,75 @@
 .search .am-search-input {
     border-radius: 24px;
     background: rgba(0, 0, 0, 0.1);
+} */
+
+
+.m-input {
+    padding: 15px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.search .container .bar {
+.f-bd {
     position: relative;
-    padding-bottom: 0.01rem;
+}
+
+.m-input .inputcover {
+    position: relative;
+    width: 100%;
+    height: 0.6rem;
+    padding: 0 0.6rem;
+    box-sizing: border-box;
+    background: #ebecec;
+    border-radius: 30px;
+}
+
+.m-input .u-svg-srch {
+    position: absolute;
+    left: 0;
+    top: 9px;
+    margin: 0 8px;
+    vertical-align: middle;
+}
+
+.u-svg-srch {
+    width: 13px;
+    height: 13px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNiAyNiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSIjYzljOWNhIiBkPSJNMjUuMTgxIDIzLjUzNWwtMS40MTQgMS40MTQtNy4zMTUtNy4zMTRBOS45NjYgOS45NjYgMCAwIDEgMTAgMjBDNC40NzcgMjAgMCAxNS41MjMgMCAxMFM0LjQ3NyAwIDEwIDBzMTAgNC40NzcgMTAgMTBjMCAyLjM0Mi0uODExIDQuNDktMi4xNiA2LjE5NWw3LjM0MSA3LjM0ek0xMCAyYTggOCAwIDEgMCAwIDE2IDggOCAwIDAgMCAwLTE2eiIvPjwvc3ZnPg==);
+}
+
+.u-svg {
+    display: inline-block;
+    vertical-align: middle;
+    background-position: 0 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.m-input .input {
+    width: 100%;
+    height: 0.6rem;
+    line-height: 18px;
+    background: rgba(0, 0, 0, 0);
+    font-size: 14px;
+    color: #333;
+    border: 0;
+    outline: 0;
+}
+
+.m-input .inputcover .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    line-height: 28px;
+    text-align: center;
+}
+
+.u-svg-empty {
+    width: 14px;
+    height: 14px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOCAyOCI+PGcgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjYmNiZGJkIiBkPSJNMTQgMGM3LjczMiAwIDE0IDYuMjY4IDE0IDE0cy02LjI2OCAxNC0xNCAxNFMwIDIxLjczMiAwIDE0IDYuMjY4IDAgMTQgMHoiLz48cGF0aCBkPSJNMTkgOUw5IDE5TTkgOWwxMCAxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWJlY2ViIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIi8+PC9nPjwvc3ZnPg==);
 }
 
 .search .hotlist {
@@ -44,4 +108,113 @@
     color: #333;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 0.64rem;
+}
+
+.m-sglst {
+    position: relative;
+}
+
+.m-sgitem,
+.m-sgitem .sgfl {
+    display: flex;
+    line-height: 1.5;
+}
+
+.m-sgitem {
+    padding-left: 10px;
+}
+
+.m-sgitem .sgfr {
+    flex: 1 1 auto;
+}
+
+.m-sgitem .sgfr {
+    display: flex;
+    position: relative;
+}
+
+.m-sgitem .sgchfl {
+    padding: 6px 0;
+    width: 0;
+}
+
+.m-sgitem .sgchfl,
+.m-sgitem .sgfr {
+    flex: 1 1 auto;
+}
+
+.m-sgitem .sgtl {
+    font-size: 17px;
+}
+
+.f-thide {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: normal;
+}
+
+.m-sgitem .sginfo {
+    font-size: 12px;
+    color: #888;
+}
+
+.m-sgitem .sghot {
+    display: inline-block;
+    width: 0.24rem;
+    height: 0.16rem;
+    margin-right: 4px;
+}
+
+.u-hmsprt {
+    background: url(//s3.music.126.net/mobile-new/img/index_icon_2x.png?5207a28…=) no-repeat;
+    background-size: 166px 97px;
+}
+
+.hcover {
+    display: inline;
+}
+
+.hcover .highlight {
+    color: #507daf;
+}
+
+.artist:last-child i {
+    display: none;
+}
+
+.m-sgitem .sgchfr {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.m-sgitem .sgchply {
+    display: inline-block;
+    width: 0.44rem;
+    height: 0.44rem;
+    background-position: -24px 0;
+}
+
+.u-hmsprt {
+    background: url(//s3.music.126.net/mobile-new/img/index_icon_2x.png?5207a28…=) no-repeat;
+    background-size: 166px 97px;
+}
+
+.search .container .f-bd-btm:after {
+    border-bottom-width: 1px;
+}
+
+.search .container .f-bd:after {
+    position: absolute;
+    z-index: 2;
+    content: "";
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    transform-origin: top left;
+    border: 0 solid rgba(0, 0, 0, .1);
 }

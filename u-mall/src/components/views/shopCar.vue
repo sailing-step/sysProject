@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="container" style="padding-top:0.88rem">
+      <div class="container" style="padding-top:0.88rem">
       <top></top>
-        <van-swipe-cell v-for="(item, i) in carList" :key="item.id">
+      <van-swipe-cell v-for="(item, i) in carList" :key="item.id">
         <van-checkbox v-model="item.status" ></van-checkbox>
           <van-card
             :price="item.price.toFixed(2)"
@@ -36,13 +36,11 @@
         <van-submit-bar
           :price="allPrice"
           button-text="提交订单"
-          @submit="onSubmit"
-        >
+          @submit="onSubmit">
           <input  type="checkbox" v-model="checkAll" @change="selectAll">全选</input>
         </van-submit-bar>
       </div>
     </div>
-  </div>
 </template>
 <script>
 import { Toast } from "vant";
@@ -55,7 +53,8 @@ export default {
         img: require("../../assets/images/public/arrow.jpg")
       },
       checkAll: false,
-      carList: []
+      carList: [],
+      checkGoods:[],// 选中的商品
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -73,8 +72,13 @@ export default {
       if(this.carList){
        this.carList.map((item, index, arr) => {
          if(item.status){
+            // this.checkGoods.push(item)
+            // console.log(this.checkGoods)
              sum += item.price * item.num;
          }
+        // else {
+        //    this.checkGoods=[]
+        //  }
         // this.checkAll = this.carList.every(item => item.status);
         // console.log(this.checkAll)
       });
@@ -86,8 +90,20 @@ export default {
     this.getList();
   },
   methods: {
+    // 去订单结算
     onSubmit() {
-      this.$router.push('/order')
+      this.checkGoods = this.carList.filter(item=>
+        item.status
+      )
+      console.log(this.checkGoods)
+      // 存储购物车信息
+      if(this.allPrice !=0){
+          sessionStorage.setItem("allPrice",JSON.stringify(this.allPrice))
+          sessionStorage.setItem("checkGoods",JSON.stringify(this.checkGoods))
+          this.$router.push('/order')
+      }else {
+        Toast('您未选择商品')
+      }
     },
     // 调取购物车列表渲染
     getList() {
@@ -97,11 +113,12 @@ export default {
         if (res.data.code == 200) {
           console.log(res, "返回值");
           this.carList = res.data.list;
-          console.log(this.carList);
+          // console.log(this.carList);
           if(this.carList){
               this.carList.map(item=>{
                   item.status = item.status==1 ? true :false
           })
+
           }         
         } else {
           Toast(res.data.msg);
@@ -109,15 +126,12 @@ export default {
       });
     },
     //封装一个全选事件
-    selectAll() {
-      
+    selectAll() {     
       if(this.carList){
           this.carList.map(item => {
             item.status = this.checkAll
               });
-      }
-      
-      
+      }     
     },
     del(i, id) {
       console.log(id);

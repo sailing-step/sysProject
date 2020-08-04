@@ -7,14 +7,14 @@
     padding-bottom: 1.68rem;
 }
 
-.index .title {
+.index .topbar .title {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 100;
-    width: 100%;
+    width: 100% !important;
     height: 1.68rem;
-    padding: 0 10px;
+    padding: 0 0.2rem;
     background-color: #d43c33;
     box-sizing: border-box;
     display: flex;
@@ -23,24 +23,24 @@
     overflow: hidden;
 }
 
-.index .title .tName {
+.index .topbar .title .tName {
     line-height: 1.68rem;
     color: #fff;
-    margin-left: 20px;
+    margin-left: 0.4rem;
     font-size: 24px;
 }
 
-.topfr {
+.topbar.topfr {
     border: 1px;
 }
 
-.topbton {
+.topbar .topbton {
     position: relative;
     display: inline-block;
-    height: 36px;
-    line-height: 36px;
+    height: 0.72rem;
+    line-height: 0.72rem;
     font-size: 16px;
-    width: 100px;
+    width: 2rem;
     text-align: center;
     color: #d43c33;
     background-color: #fff;

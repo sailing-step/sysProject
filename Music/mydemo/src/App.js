@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // 引入要渲染的组件
 import Index from './components/pages/index'
 import Play from './components/pages/play'
-import List from './components/pages/list'
+import Detail from './components/pages/detail'
 // 引入路由插件中相关的属性和方法
 import { Route, Switch, Link, Redirect, NavLink } from 'react-router-dom'
 import './App.css';
@@ -17,7 +17,7 @@ export default class App extends Component {
           {/* <Route path="/play/:id" component={Play}></Route> */}
           {/* query参数 */}
           <Route path="/play" component={Play}></Route>
-          <Route path="/list" component={List}></Route>
+          <Route path="/detail" component={Detail}></Route>
           <Redirect to="/index"></Redirect>
         </Switch>
       </div>

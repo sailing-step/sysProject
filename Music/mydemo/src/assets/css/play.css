@@ -12,18 +12,15 @@
     overflow: hidden;
 }
 
+
+
 .play .container .m-song-bg {
-    background-image: url('../images/play.jpg');
-    opacity: 1;
     background-color: #161824;
     background-position: 50%;
     background-repeat: no-repeat;
-    background-size: auto 100%;
-    -webkit-transform: scale(1.5);
-    -ms-transform: scale(1.5);
+    /* background-size: auto 100%; */
+    background-size: cover;
     transform: scale(1.5);
-    -webkit-transform-origin: center top;
-    -ms-transform-origin: center top;
     transform-origin: center top;
     position: fixed;
     left: 0;
@@ -31,14 +28,12 @@
     top: 0;
     height: 100%;
     overflow: hidden;
-    z-index: -1;
-    -webkit-transition: opacity .3s linear;
     transition: opacity .3s linear;
     z-index: 1;
+    filter: blur(10px);
 }
 
-
-.m-song-bg:before {
+.play .container .m-song-bg:before {
     content: " ";
     position: absolute;
     left: 0;
@@ -144,6 +139,7 @@
     z-index: 10;
     background: url('../images/play.png') 0 0 no-repeat;
     background-size: contain;
+    display: none;
 }
 
 .m-song-plybtn:after {
@@ -205,7 +201,7 @@
 }
 
 .m-song-scroll {
-    height: 1.34rem;
+    height: 1.12rem;
     line-height: 1.5;
     font-size: 0.32rem;
     height: 1.44rem;
@@ -223,6 +219,7 @@
 .m-song-lritem {
     padding-bottom: 0.16rem;
     color: rgb(255, 255, 255);
+    /* height: 32px; */
 }
 
 .u-ft {
@@ -291,4 +288,8 @@
     background-color: #fff;
     text-align: center;
     box-sizing: border-box;
+}
+
+.active {
+    color: #ff3a3a
 }

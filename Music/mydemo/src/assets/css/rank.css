@@ -1,5 +1,5 @@
 .rank {
-  font-size: 20px;
+  font-size: 14px;
 }
 
 .rank .hotop {
@@ -20,14 +20,14 @@
   top: 0;
   bottom: 0;
   z-index: 2;
-  padding-left: 20px;
+  padding-left: 0.4rem;
   box-sizing: border-box;
 }
 
 .rank .hotop .hotPic .hoticon {
   width: 2.84rem;
   height: 1.34rem;
-  background-position: -24px -30px;
+  background-position: -0.48rem -0.6rem;
 }
 
 .u-hmsprt {
@@ -41,61 +41,90 @@
   font-size: 12px;
 }
 
+.m-sglst {
+  position: relative;
+}
+
 .rank .sgitem {
   display: flex;
   padding-left: 10px;
+}
+
+.sgalia {
+  color: #888;
+  margin-left: 4px;
 }
 
 .rank .sgitem .sgfl {
   display: flex;
   width: 0.8rem;
   font-size: 17px;
-  margin-left: -10px;
+  margin-left: -0.2rem;
   align-items: center;
   justify-content: center;
   color: #999;
 }
 
+.rank .sgitem .sgfl-cred {
+  color: #df3436;
+}
+
 .rank .sgitem .sgfr {
   display: flex;
-  flex-grow: 1;
+  position: relative;
+  flex: 1 1 auto;
   border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 
-.rank .sgitem .sgfr .innerfl {
+.rank .sgitem .sgfr .sgchfl {
   padding: 6px 0;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  line-height: 1.5;
+  width: 5.86rem;
 }
 
-.rank .sgitem .sgfr .innerfl .f-thide {
+.sghot {
+  display: inline-block;
+  width: 0.24rem;
+  height: 0.16rem;
+  margin-right: 4px;
+}
+
+.u-hmsprt {
+  background: url(//s3.music.126.net/mobile-new/img/index_icon_2x.png?5207a28…=) no-repeat;
+  background-size: 3.32rem 1.94rem;
+}
+
+.f-thide {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: normal;
-  line-height: 1.5;
 }
 
-.rank .sgitem .sgfr .innerfl .sgtl {
+.rank .sgitem .sgfr .sgchfl .sgtl {
   font-size: 17px;
   color: #333;
+  line-height: 1.5;
+  width: 5.86rem;
 }
 
-.rank .sgitem .sgfr .innerfl .sginfo {
+.rank .sgitem .sgfr .sgchfl .sginfo {
   font-size: 12px;
   color: #888;
 }
 
-.rank .sgitem .sgfr .innerfr {
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 0 10px;
-
+.sginfo .artist:last-child i {
+  display: none;
 }
 
-.sgchply {
+.rank .sgitem .sgfr .sgchfr {
+  display: flex;
+  padding: 0 0.2rem;
+  align-items: center;
+}
+
+.rank .sgitem .sgfr .sgchfr .sgchply {
   display: inline-block;
   width: 0.44rem;
   height: 0.44rem;
