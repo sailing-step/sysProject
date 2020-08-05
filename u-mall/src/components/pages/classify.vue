@@ -6,9 +6,11 @@
         <ul>
           <li v-for="(item, i) in navList" :key="item.id" @click="sel(i)">
             <i :class="[i == num ? 'bar' : '']"></i>
-            <a href="javascript:;" :class="[i == num ? 'orange' : '']">{{
+            <a href="javascript:;" :class="[i == num ? 'orange' : '']">
+              {{
               item.catename
-            }}</a>
+              }}
+            </a>
           </li>
         </ul>
       </div>
@@ -21,11 +23,7 @@
             </div>
           </div>
           <ul class="pro-list">
-            <li
-              v-for="(item, index) in goodsList"
-              :key="item.id"
-              @click="goDetail(index, fid, id)"
-            >
+            <li v-for="(item, index) in goodsList" :key="item.id" @click="goDetail(index, fid, id)">
               <a href="javascript:;">
                 <img
                   :src="$imgUrl + item.img"
@@ -60,23 +58,23 @@ export default {
       title: "",
       fid: 0,
       head: {
-        img: require("../../assets/images/public/arrow.jpg")
+        img: require("../../assets/images/public/arrow.jpg"),
       },
       num: 0,
       navList: [],
       goodsList: [],
-      goodsInfo: []
+      goodsInfo: [],
     };
   },
   computed: {
-    ...mapGetters(["getNum"])
+    ...mapGetters(["getNum"]),
   },
   mounted() {
     this.fid = this.$route.query.fid;
     // this.getcateTree();
     console.log(this.getNum);
     this.num = this.getNum;
-    getcatetree().then(res => {
+    getcatetree().then((res) => {
       if (res.data.code == 200) {
         console.log(res.data.list);
         this.navList = res.data.list;
@@ -88,7 +86,7 @@ export default {
   methods: {
     sel(i) {
       this.num = i;
-      getcatetree().then(res => {
+      getcatetree().then((res) => {
         if (res.data.code == 200) {
           console.log(res.data.list);
           this.navList = res.data.list;
@@ -103,15 +101,15 @@ export default {
     goSearch(fid) {
       console.log(this.$router);
       this.$router.push({
-        path: "/search",
+        path: "/proList",
         query: {
-          fid
-        }
+          fid,
+        },
       });
     },
     goDetail(i, fid, id) {
       console.log(fid);
-      getcategoods({ fid }).then(res => {
+      getcategoods({ fid }).then((res) => {
         if (res.data.code == 200) {
           console.log(res);
           this.goodsInfo = res.data.list;
@@ -124,22 +122,22 @@ export default {
           this.$router.push({
             path: "/proDetail",
             query: {
-              id
-            }
+              id,
+            },
           });
         }
       });
     },
     // 获取树形结构分类信息
     getcateTree(i) {
-      getcatetree().then(res => {
+      getcatetree().then((res) => {
         if (res.data.code == 200) {
           console.log(res.data.list);
           this.navList = res.data.list;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
