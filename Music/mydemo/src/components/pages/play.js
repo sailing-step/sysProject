@@ -117,7 +117,7 @@ export default class play extends Component {
         }
     }
     render() {
-        const { lyric, songUrl, songDetail, playTime, al } = this.state
+        const { lyric, songUrl, songDetail, playTime, al, flag } = this.state
         // console.log(al)
         return (
             <div className="play">
@@ -135,7 +135,8 @@ export default class play extends Component {
                                             <div className="m-song-disc">
                                                 <div className="m-song-turn">
                                                     <div className="m-song-rollwrap" style={{ transform: 'matrix(0.161973, 0.986795, -0.986795, 0.161973, 0, 0)' }}>
-                                                        <div className="m-song-img ">
+                                                        {/* <div className="m-song-img " ref={this.trans}> */}
+                                                        <div className={`m-song-img ${flag ? '' : 'a-circling'} `}>
                                                             {
                                                                 songDetail.al ? <img className="u-img" alt="song-img" src={songDetail.al.picUrl} /> : ''
                                                             }
