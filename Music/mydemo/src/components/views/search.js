@@ -60,6 +60,15 @@ export default class search extends Component {
             this.goSearch(e.target.value)
         }
     }
+    // 封装一个query跳转的方法
+    goPlay(id) {
+        this.props.history.push({
+            pathname: '/play',
+            state: {
+                id
+            }
+        })
+    }
     render() {
 
         const { searchhotList, searchList } = this.state
@@ -104,7 +113,7 @@ export default class search extends Component {
                         <ul className="m-sglst">
                             {
                                 searchList.length > 0 ? searchList.map(item => {
-                                    return <li className="m-sgitem" key={item.id}>
+                                    return <li className="m-sgitem" key={item.id} onClick={this.goPlay.bind(this, item.id)}>
                                         <div className="sgfr f-bd f-bd-btm">
                                             <div className="sgchfl">
                                                 <div className="f-thide sgtl">{item.name}</div>

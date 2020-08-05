@@ -85,6 +85,15 @@ export default class Home extends Component {
             return parseFloat(parseInt(num / 10000) + '.' + decimal) + '万'
         }
     }
+    // 封装一个query跳转的方法
+    goPlay(id) {
+        this.props.history.push({
+            pathname: '/play',
+            state: {
+                id
+            }
+        })
+    }
     render() {
         const { songInfo, songList, bannerList } = this.state
         return (
@@ -126,7 +135,7 @@ export default class Home extends Component {
                             {
                                 songList.map((item, i) => {
 
-                                    return <div className="sgitem" key={item.id}>
+                                    return <div className="sgitem" key={item.id} onClick={this.goPlay.bind(this, item.id)}>
                                         <div className="sgfr">
                                             <div className="innerfl">
                                                 <div className=" f-thide sgtl">{item.song.name}
